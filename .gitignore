@@ -1,6 +1,7 @@
 # build output
 dist/
 .astro/
+.vercel/
 
 # dependencies
 node_modules/
@@ -17,3 +18,5 @@ Thumbs.db
 
 # local reports
 lighthouse/*.html
+.vercel
+.env*

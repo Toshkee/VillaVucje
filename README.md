@@ -17,6 +17,10 @@ Default language is Montenegrin/Serbian (Latin) at `/`, with English at `/en/`.
 
 The lockfile is `package-lock.json`. Deploy `dist/` to any static host or CDN (Netlify, Cloudflare Pages, Vercel static, GitHub Pages, an nginx bucket). No server runtime is needed.
 
+### Vercel
+
+Use `nvm use` to select Node 24, then `npm ci`. `vercel.json` selects Astro, builds with `npm run build`, and publishes `dist/`. Deploy with `vercel --prod` after linking the project. Vercel's production domain is used automatically for canonical URLs, language alternates and the sitemap; set `SITE_URL` to override it with your preferred domain. Local Vercel project metadata is ignored by Git.
+
 ## Where things live
 
 ```
