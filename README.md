@@ -25,7 +25,18 @@ The site is deployed to Cloudflare Workers as static assets (`wrangler.jsonc` pu
 - Git-connected deploys: in the Cloudflare dashboard go to Workers & Pages → Create → Workers → import `Toshkee/VillaVucje`. Build command `npm run build`, deploy command `npx wrangler deploy`. Every push to `main` deploys; other branches get preview URLs.
 - Local check of the production bundle on the Workers runtime: `npm run preview:cf`.
 
-Once the domain is bought (Cloudflare Registrar), add it under the Worker's Settings → Domains & Routes → Custom domain. Cloudflare creates the DNS record and certificate. Then set `SITE_URL=https://<domain>` in the Worker's build variables (or in `.env` for local builds) so canonical URLs, hreflang, Open Graph and the sitemap are emitted. `.wrangler/` local state is ignored by Git.
+#### Domain
+
+The domain is `villavucje.me`, registered at Namecheap. It is the default origin in `src/config/site.ts`, so no environment variable is needed for a production build.
+
+To serve it from the Worker, the zone has to be on Cloudflare DNS:
+
+1. Cloudflare dashboard → Add a site → `villavucje.me` (Free plan) → Cloudflare shows two nameservers.
+2. Namecheap → Domain List → Manage → Nameservers → Custom DNS → paste both, save. Propagation is usually minutes, up to 24 h.
+3. Worker → Settings → Domains & Routes → Add custom domain → `villavucje.me`, then again for `www.villavucje.me`. Cloudflare creates the records and the certificate.
+4. Optional: a Cloudflare redirect rule from `www.villavucje.me/*` to `https://villavucje.me/$1` (301) keeps one canonical host.
+
+`.wrangler/` local state is ignored by Git.
 
 ## Where things live
 
@@ -35,7 +46,7 @@ src/
     property.ts   property facts, house rules, booking providers, Instagram, contact, map pin
     i18n.ts       every string on the site, per language (sr, en), alt text and captions
     media.ts      photo manifest: file, roles, focal points, season; optional hero video
-    site.ts       reads SITE_URL from the environment
+    site.ts       production origin (SITE_URL overrides it)
   assets/photos/  original photographs (imported by media.ts)
   components/     Header, Hero, Facts, Inside, Outside, Gallery, Location, BookingSection, Footer, BookingBar, Photo
   layouts/Base.astro   <head>: meta, hreflang, Open Graph, JSON-LD, fonts
@@ -87,7 +98,7 @@ The poster (hero photo) always renders first. The script attaches the video only
 
 ### Domain, canonical URLs, sitemap
 
-Copy `.env.example` to `.env` and set `SITE_URL=https://your-domain` (no trailing slash), or set it in the host's build environment. With it present the build emits canonical URLs, `hreflang` alternates, absolute Open Graph image URLs, `sitemap-index.xml` and the sitemap line in `robots.txt`. Without it those are omitted and the build prints a warning.
+The production origin is `https://villavucje.me`, hard-coded in `src/config/site.ts`. It drives canonical URLs, `hreflang` alternates, absolute Open Graph image URLs, `sitemap-index.xml` and the sitemap line in `robots.txt`. For a staging build, override it with `SITE_URL=https://staging.example` (no trailing slash) in `.env` or the host's build environment.
 
 ## Design notes
 
@@ -130,7 +141,7 @@ Facts marked "Booking" were read from the Booking.com listing on 2026‑09‑07 
 - [ ] Confirm the map pin (currently the Booking.com pin, 42.798722, 19.45032) and then set `geo.verified = true`.
 - [x] Airbnb listing URL supplied by the owner and added (see "Booking links" above).
 - [ ] Contact email / phone / WhatsApp for the footer.
-- [ ] Production domain → `SITE_URL`; then verify `sitemap-index.xml`, `robots.txt`, `hreflang` and the social preview.
+- [ ] Point `villavucje.me` at Cloudflare DNS and attach it to the Worker; then verify `sitemap-index.xml`, `robots.txt`, `hreflang` and the social preview.
 - [ ] More photographs: kitchen, bedrooms, bathrooms, balcony, a winter exterior, and full-resolution originals of the five supplied (they are 1600 px exports). The yard photo was supplied sideways and has been rotated; its device metadata was stripped.
 - [ ] Optional: a clean, silent outdoor clip for the hero (see above). No video was supplied, so the site ships with the photo hero.
 - [ ] Decide whether the Booking.com listing name should be aligned with "Villa Vučje" (the listing is titled "Villa Vucje near Kolasin").

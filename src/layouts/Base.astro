@@ -25,7 +25,7 @@ const tr = t(locale);
 const lang = langTag[locale];
 const path = localePath[locale];
 
-const absolute = (p: string): string | undefined => (SITE_URL ? `${SITE_URL}${p}` : undefined);
+const absolute = (p: string): string => `${SITE_URL}${p}`;
 const canonical = absolute(path);
 const ogImage = absolute('/og-villa-vucje.jpg');
 
@@ -37,7 +37,7 @@ const structuredData = {
   '@type': 'VacationRental',
   name: property.name,
   description: tr.meta.description,
-  ...(canonical ? { url: canonical } : {}),
+  url: canonical,
   ...(absolute(heroImage.src) ? { image: [absolute(heroImage.src)] } : {}),
   address: {
     '@type': 'PostalAddress',
@@ -110,24 +110,23 @@ const structuredData = {
       media={heroSources.portrait ? HERO_LANDSCAPE_MEDIA : undefined}
     />
 
-    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="canonical" href={canonical} />
     {
-      SITE_URL &&
-        locales.map((l) => <link rel="alternate" hreflang={langTag[l]} href={`${SITE_URL}${localePath[l]}`} />)
+      locales.map((l) => <link rel="alternate" hreflang={langTag[l]} href={`${SITE_URL}${localePath[l]}`} />)
     }
-    {SITE_URL && <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${localePath.sr}`} />}
-    {SITE_URL && <link rel="sitemap" href="/sitemap-index.xml" />}
+    <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${localePath.sr}`} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={property.name} />
     <meta property="og:title" content={tr.meta.title} />
     <meta property="og:description" content={tr.meta.description} />
     <meta property="og:locale" content={ogLocale[locale]} />
-    {canonical && <meta property="og:url" content={canonical} />}
-    {ogImage && <meta property="og:image" content={ogImage} />}
-    {ogImage && <meta property="og:image:width" content="1200" />}
-    {ogImage && <meta property="og:image:height" content="630" />}
-    {ogImage && <meta property="og:image:alt" content={tr.photos.exterior} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={tr.photos.exterior} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <script is:inline>
