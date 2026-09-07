@@ -1,9 +1,7 @@
 ---
 import { anchors, t, type Locale } from '@config/i18n';
-import { activeProviders } from '@config/property';
 import { heroVideo, photoByRole } from '@config/media';
 import { getHeroSources, HERO_PORTRAIT_MEDIA } from '../lib/hero';
-import ExternalIcon from './ExternalIcon.astro';
 
 interface Props {
   locale: Locale;
@@ -11,7 +9,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const tr = t(locale);
-const labels = { booking: tr.cta.booking, airbnb: tr.cta.airbnb } as const;
 const hero = photoByRole('hero');
 const { landscape, portrait } = await getHeroSources();
 const heroStyle = `--focal-mobile:${hero.focalMobile.x}% ${hero.focalMobile.y}%;--focal-desktop:${hero.focalDesktop.x}% ${hero.focalDesktop.y}%`;
@@ -73,21 +70,7 @@ const videoLabels =
       <p class="hero-location hero-in">{tr.hero.location}</p>
       <p class="lede hero-in">{tr.hero.lede}</p>
       <div class="hero-actions hero-in">
-        {
-          activeProviders.map((provider, i) => (
-            <a
-              class:list={['btn', i === 0 ? 'btn-light' : 'btn-outline-light']}
-              href={provider.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-hero-cta={i === 0 ? '' : undefined}
-            >
-              {labels[provider.id]}
-              <ExternalIcon />
-              <span class="visually-hidden">({tr.cta.newTab})</span>
-            </a>
-          ))
-        }
+        <a class="btn btn-light" href={`#${a.booking}`} data-hero-cta>{tr.cta.availability}</a>
         <a class="text-link" href={`#${a.house}`}>{tr.cta.explore}</a>
       </div>
     </div>
@@ -176,7 +159,7 @@ const videoLabels =
     display: flex;
     align-items: flex-end;
     padding-top: 10rem;
-    padding-bottom: clamp(2rem, 5vw, 5rem);
+    padding-bottom: clamp(2rem, 4vw, 4rem);
     pointer-events: none;
   }
 

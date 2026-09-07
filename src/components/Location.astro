@@ -20,6 +20,16 @@ const tr = t(locale);
       </div>
 
       <div class="location-card" data-reveal data-reveal-delay="80">
+        <dl class="location-facts">
+          <div>
+            <dt>{tr.location.distanceLabel}</dt>
+            <dd>{tr.location.distanceValue}</dd>
+          </div>
+          <div>
+            <dt>{tr.location.accessLabel}</dt>
+            <dd>{tr.location.accessValue}</dd>
+          </div>
+        </dl>
         <dl>
           <dt>{tr.location.addressLabel}</dt>
           <dd>{tr.location.address}</dd>
@@ -46,7 +56,7 @@ const tr = t(locale);
   }
 
   .location-card {
-    padding: 1.5rem;
+    padding: 1.25rem;
     background: var(--ivory-deep);
     border-radius: var(--radius);
     display: flex;
@@ -57,6 +67,19 @@ const tr = t(locale);
 
   .location-card dl {
     margin: 0;
+  }
+
+  .location-facts {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--stone-line);
+  }
+
+  .location-facts div {
+    min-width: 0;
   }
 
   .location-card dt {
@@ -82,7 +105,7 @@ const tr = t(locale);
     }
 
     .location-card {
-      padding: 2rem;
+      padding: 1.5rem;
     }
   }
 </style>

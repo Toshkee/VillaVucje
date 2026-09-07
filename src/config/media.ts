@@ -5,6 +5,13 @@ import livingDining from '@assets/photos/living-dining.jpg';
 import livingRoom from '@assets/photos/living-room.jpg';
 import fireplace from '@assets/photos/fireplace.jpg';
 import garden from '@assets/photos/garden-view.jpg';
+import kitchenLiving from '@assets/photos/kitchen-living.jpg';
+import staircaseEntry from '@assets/photos/staircase-entry.jpg';
+import diningDetail from '@assets/photos/dining-detail.jpg';
+import bedroomHallway from '@assets/photos/bedroom-hallway.jpg';
+import bathroom from '@assets/photos/bathroom.jpg';
+import twinBedroom from '@assets/photos/twin-bedroom.jpg';
+import doubleBedroom from '@assets/photos/double-bedroom.jpg';
 
 /**
  * Media manifest. Alt text and captions live in i18n.ts under the same key
@@ -12,7 +19,19 @@ import garden from '@assets/photos/garden-view.jpg';
  * `object-position` so crops on narrow screens keep the important part of
  * the photograph.
  */
-export type PhotoKey = 'exterior' | 'livingDining' | 'livingRoom' | 'fireplace' | 'garden';
+export type PhotoKey =
+  | 'exterior'
+  | 'livingDining'
+  | 'livingRoom'
+  | 'fireplace'
+  | 'garden'
+  | 'kitchenLiving'
+  | 'staircaseEntry'
+  | 'diningDetail'
+  | 'bedroomHallway'
+  | 'bathroom'
+  | 'twinBedroom'
+  | 'doubleBedroom';
 
 export type PhotoRole = 'hero' | 'inside-large' | 'inside-detail' | 'outside' | 'gallery';
 
@@ -51,10 +70,73 @@ export const photos: readonly Photo[] = [
     season: 'late-autumn',
   },
   {
+    key: 'kitchenLiving',
+    file: 'kitchen-living.jpg',
+    image: kitchenLiving,
+    roles: ['inside-large'],
+    focalMobile: { x: 58, y: 58 },
+    focalDesktop: { x: 50, y: 55 },
+    season: 'late-autumn',
+  },
+  {
+    key: 'doubleBedroom',
+    file: 'double-bedroom.jpg',
+    image: doubleBedroom,
+    roles: ['gallery'],
+    focalMobile: { x: 55, y: 52 },
+    focalDesktop: { x: 50, y: 50 },
+    season: 'late-autumn',
+  },
+  {
+    key: 'twinBedroom',
+    file: 'twin-bedroom.jpg',
+    image: twinBedroom,
+    roles: ['gallery'],
+    focalMobile: { x: 52, y: 52 },
+    focalDesktop: { x: 50, y: 50 },
+    season: 'late-autumn',
+  },
+  {
+    key: 'bathroom',
+    file: 'bathroom.jpg',
+    image: bathroom,
+    roles: ['gallery'],
+    focalMobile: { x: 58, y: 50 },
+    focalDesktop: { x: 50, y: 50 },
+    season: 'late-autumn',
+  },
+  {
+    key: 'diningDetail',
+    file: 'dining-detail.jpg',
+    image: diningDetail,
+    roles: ['gallery'],
+    focalMobile: { x: 53, y: 55 },
+    focalDesktop: { x: 50, y: 50 },
+    season: 'late-autumn',
+  },
+  {
+    key: 'staircaseEntry',
+    file: 'staircase-entry.jpg',
+    image: staircaseEntry,
+    roles: ['gallery'],
+    focalMobile: { x: 62, y: 50 },
+    focalDesktop: { x: 50, y: 50 },
+    season: 'late-autumn',
+  },
+  {
+    key: 'bedroomHallway',
+    file: 'bedroom-hallway.jpg',
+    image: bedroomHallway,
+    roles: ['gallery'],
+    focalMobile: { x: 60, y: 50 },
+    focalDesktop: { x: 50, y: 50 },
+    season: 'late-autumn',
+  },
+  {
     key: 'livingDining',
     file: 'living-dining.jpg',
     image: livingDining,
-    roles: ['inside-large', 'gallery'],
+    roles: ['gallery'],
     focalMobile: { x: 55, y: 55 },
     focalDesktop: { x: 50, y: 55 },
     season: 'late-autumn',
@@ -94,13 +176,17 @@ export function photoByRole(role: PhotoRole): Photo {
   return photo;
 }
 
-/** Gallery order tells the story: exterior, fireplace, living, dining, outside. */
+/** Gallery order walks through the house without repeating section photographs. */
 export const galleryOrder: readonly PhotoKey[] = [
   'exterior',
-  'fireplace',
-  'livingRoom',
+  'doubleBedroom',
+  'twinBedroom',
+  'bathroom',
   'livingDining',
-  'garden',
+  'diningDetail',
+  'staircaseEntry',
+  'bedroomHallway',
+  'livingRoom',
 ];
 
 export const galleryPhotos: readonly Photo[] = galleryOrder.map((key) => {

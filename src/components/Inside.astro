@@ -1,6 +1,6 @@
 ---
 import { anchors, t, type Locale } from '@config/i18n';
-import { property } from '@config/property';
+import { type AmenityKey } from '@config/property';
 import { photoByRole } from '@config/media';
 import Photo from './Photo.astro';
 
@@ -12,6 +12,11 @@ const { locale } = Astro.props;
 const tr = t(locale);
 const large = photoByRole('inside-large');
 const detail = photoByRole('inside-detail');
+const amenityGroups: { title: string; items: AmenityKey[] }[] = [
+  { title: tr.inside.amenityGroups.together, items: ['fireplace', 'kitchen', 'wifi', 'dishwasher'] },
+  { title: tr.inside.amenityGroups.outside, items: ['garden', 'terrace', 'balcony', 'bbq'] },
+  { title: tr.inside.amenityGroups.practical, items: ['parking', 'washer'] },
+];
 ---
 
 <section id={anchors[locale].house} class="section inside" aria-labelledby="inside-title">
@@ -42,9 +47,14 @@ const detail = photoByRole('inside-detail');
 
     <div class="amenities" data-reveal>
       <h3>{tr.inside.amenitiesHeading}</h3>
-      <ul>
-        {property.amenities.map((key) => <li>{tr.amenities[key]}</li>)}
-      </ul>
+      <div class="amenity-groups">
+        {amenityGroups.map((group) => (
+          <div class="amenity-group">
+            <h4>{group.title}</h4>
+            <ul>{group.items.map((key) => <li>{tr.amenities[key]}</li>)}</ul>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>
@@ -78,8 +88,8 @@ const detail = photoByRole('inside-detail');
   }
 
   .amenities {
-    margin-top: clamp(2rem, 4vw, 3rem);
-    padding-top: 1.5rem;
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+    padding-top: 1.25rem;
   }
 
   .amenities h3 {
@@ -89,24 +99,54 @@ const detail = photoByRole('inside-detail');
     color: var(--sage-text);
   }
 
+  .amenity-groups {
+    display: grid;
+    gap: 1rem;
+    margin-top: 0.9rem;
+  }
+
+  .amenity-group {
+    padding: 1rem 0 0;
+    border-top: 1px solid var(--stone-line);
+  }
+
+  .amenity-group h4 {
+    margin: 0;
+    font-size: var(--text-small);
+    color: var(--rust-text);
+  }
+
   .amenities ul {
     list-style: none;
     margin: 0.9rem 0 0;
     padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
+    display: grid;
+    gap: 0.4rem;
     font-size: 1rem;
   }
 
   .amenities li {
-    padding: 0.55rem 1rem;
-    border-radius: 0.6rem;
-    background: var(--ivory-deep);
+    position: relative;
+    padding-left: 1.1rem;
     color: var(--forest);
   }
 
+  .amenities li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 50%;
+    background: var(--rust);
+  }
+
   @media (min-width: 60em) {
+    .amenity-groups {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .inside-grid {
       grid-template-columns: repeat(12, minmax(0, 1fr));
       grid-template-rows: auto auto;

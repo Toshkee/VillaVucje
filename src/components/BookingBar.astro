@@ -1,7 +1,6 @@
 ---
 import { t, type Locale } from '@config/i18n';
-import { activeProviders } from '@config/property';
-import ExternalIcon from './ExternalIcon.astro';
+import { anchors } from '@config/i18n';
 
 interface Props {
   locale: Locale;
@@ -9,24 +8,13 @@ interface Props {
 
 const { locale } = Astro.props;
 const tr = t(locale);
-const labels = { booking: tr.cta.booking, airbnb: tr.cta.airbnb } as const;
+const a = anchors[locale];
 ---
 
 {
-  activeProviders.length > 0 && (
+  (
     <div class="booking-bar on-dark" data-booking-bar aria-hidden="true" inert>
-      {activeProviders.map((provider, i) => (
-        <a
-          class:list={['btn', i === 0 ? 'btn-light' : 'btn-outline-light']}
-          href={provider.url}
-          aria-label={`${labels[provider.id]} (${tr.cta.newTab})`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {provider.id === 'booking' ? 'Booking.com' : 'Airbnb'}
-          <ExternalIcon />
-        </a>
-      ))}
+      <a class="btn btn-light" href={`#${a.booking}`}>{tr.cta.availability}</a>
     </div>
   )
 }
@@ -49,6 +37,8 @@ const labels = { booking: tr.cta.booking, airbnb: tr.cta.airbnb } as const;
 
   .booking-bar .btn {
     flex: 1;
+    max-width: 32rem;
+    margin-inline: auto;
     min-width: 0;
     padding-inline: 0.65rem;
     min-height: 2.85rem;

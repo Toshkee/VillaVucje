@@ -1,0 +1,153 @@
+---
+import { t, type Locale } from '@config/i18n';
+import { bookingReviews } from '@config/property';
+import ExternalIcon from './ExternalIcon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+---
+
+<section class="section reviews" aria-labelledby="reviews-title">
+  <div class="container">
+    <div class="reviews-head" data-reveal>
+      <div>
+        <p class="eyebrow">{tr.reviews.eyebrow}</p>
+        <h2 id="reviews-title">{tr.reviews.heading}</h2>
+      </div>
+      <div class="score" aria-label={`${tr.reviews.scoreLabel}: ${bookingReviews.score} / 10`}>
+        <strong>{bookingReviews.score}</strong>
+        <span><b>Booking.com</b>{tr.reviews.count}</span>
+      </div>
+    </div>
+
+    <ul class="review-grid">
+      {bookingReviews.excerpts.map((review, i) => (
+        <li data-reveal data-reveal-delay={String(i * 70)}>
+          <blockquote>“{tr.reviews.excerpts[review.key]}”</blockquote>
+          <p><strong>{review.guest}</strong><span>{review.country[locale]}</span></p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="reviews-foot" data-reveal>
+      <a href={bookingReviews.url} target="_blank" rel="noopener noreferrer">
+        {tr.reviews.readAll}<ExternalIcon />
+        <span class="visually-hidden">({tr.cta.newTab})</span>
+      </a>
+      <p>{tr.reviews.sourceNote}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews-head {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .eyebrow {
+    margin-bottom: 0.65rem;
+    color: var(--rust-text);
+    font-size: var(--text-small);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .score {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .score > strong {
+    font-family: var(--font-serif);
+    font-size: clamp(3.5rem, 8vw, 5.5rem);
+    line-height: 1;
+    color: var(--forest);
+  }
+
+  .score span {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--text-small);
+    color: var(--text-muted);
+  }
+
+  .score b {
+    color: var(--charcoal);
+    font-size: 1rem;
+  }
+
+  .review-grid {
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .review-grid li {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 11.5rem;
+    padding: 1.25rem;
+    background: var(--ivory-deep);
+    border-radius: var(--radius);
+  }
+
+  blockquote {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    line-height: 1.4;
+    color: var(--forest);
+  }
+
+  .review-grid p {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+    font-size: var(--text-small);
+  }
+
+  .review-grid p span {
+    color: var(--text-muted);
+  }
+
+  .reviews-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    margin-top: 1.5rem;
+    font-size: var(--text-small);
+  }
+
+  .reviews-foot a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+  }
+
+  .reviews-foot p {
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 48em) {
+    .reviews-head {
+      grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr);
+      align-items: end;
+    }
+
+    .review-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

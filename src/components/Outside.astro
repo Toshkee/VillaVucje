@@ -1,7 +1,5 @@
 ---
 import { t, type Locale } from '@config/i18n';
-import { photoByRole } from '@config/media';
-import Photo from './Photo.astro';
 
 interface Props {
   locale: Locale;
@@ -9,24 +7,18 @@ interface Props {
 
 const { locale } = Astro.props;
 const tr = t(locale);
-const garden = photoByRole('outside');
 ---
 
 <section class="section section-band outside" aria-labelledby="outside-title">
   <div class="container">
     <div class="outside-grid">
-      <figure class="photo outside-photo" data-reveal>
-        <Photo
-          photo={garden}
-          alt={tr.photos.garden}
-          sizes="(min-width: 60em) 62vw, 100vw"
-          widths={[640, 960, 1280, 1600]}
-        />
-      </figure>
-      <div class="outside-text" data-reveal data-reveal-delay="80">
+      <div class="outside-text" data-reveal>
         <h2 id="outside-title">{tr.outside.heading}</h2>
         {tr.outside.body.map((p) => <p>{p}</p>)}
       </div>
+      <ul class="outside-highlights" data-reveal data-reveal-delay="80">
+        {tr.outside.highlights.map((item) => <li>{item}</li>)}
+      </ul>
     </div>
   </div>
 </section>
@@ -37,31 +29,41 @@ const garden = photoByRole('outside');
     gap: 1.75rem;
   }
 
-  figure {
-    margin: 0;
-  }
-
-  .outside-photo {
-    aspect-ratio: 16 / 10;
+  .outside-text {
+    max-width: 42rem;
   }
 
   .outside-text h2 + p {
     margin-top: 1.1rem;
   }
 
+  .outside-highlights {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.5rem;
+    border-bottom: 1px solid var(--stone-line);
+  }
+
+  .outside-highlights li {
+    display: flex;
+    align-items: center;
+    min-height: 4rem;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--stone-line);
+    color: var(--forest);
+    font-family: var(--font-serif);
+    font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  }
+
   @media (min-width: 60em) {
     .outside-grid {
-      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
       gap: clamp(2.5rem, 5vw, 5rem);
       align-items: center;
     }
 
-    .outside-photo {
-      aspect-ratio: 16 / 11;
-      /* Bleed to the left edge of the viewport while the text stays in the grid. */
-      margin-left: calc(-1 * max(var(--gutter), (100vw - var(--container)) / 2));
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
   }
 </style>

@@ -1,7 +1,5 @@
 ---
 import { anchors, localePath, otherLocale, t, type Locale } from '@config/i18n';
-import { primaryProvider } from '@config/property';
-import ExternalIcon from './ExternalIcon.astro';
 
 interface Props {
   locale: Locale;
@@ -59,17 +57,9 @@ const links = [
             {tr.meta.switchLabel}
           </a>
         </li>
-        {
-          primaryProvider && (
-            <li class="nav-cta">
-              <a class="btn btn-primary" href={primaryProvider.url} target="_blank" rel="noopener noreferrer">
-                {tr.cta.booking}
-                <ExternalIcon />
-                <span class="visually-hidden">({tr.cta.newTab})</span>
-              </a>
-            </li>
-          )
-        }
+        <li class="nav-cta">
+          <a class="btn btn-primary" href={`${base}#${a.booking}`} data-nav-link>{tr.cta.availability}</a>
+        </li>
       </ul>
     </nav>
   </div>

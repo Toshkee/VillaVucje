@@ -113,6 +113,19 @@ export const social = {
   },
 } as const;
 
+/** Snapshot of the public Booking.com score, checked on 2026-09-07. */
+export const bookingReviews = {
+  score: 9.8,
+  count: 11,
+  url: 'https://www.booking.com/reviews/me/hotel/villa-vucje-near-kolasin.html',
+  checkedAt: '2026-09-07',
+  excerpts: [
+    { guest: 'Gabriel', country: { sr: 'Sjedinjene Američke Države', en: 'United States' }, key: 'gabriel' },
+    { guest: 'Meli', country: { sr: 'Albanija', en: 'Albania' }, key: 'meli' },
+    { guest: 'Andrei', country: { sr: 'Estonija', en: 'Estonia' }, key: 'andrei' },
+  ],
+} as const;
+
 /**
  * Contact details. Left empty until the owner supplies them; the footer
  * renders only the entries that have a value.
