@@ -1,0 +1,58 @@
+---
+/**
+ * Responsive photograph: AVIF and WebP sources with a JPEG fallback,
+ * intrinsic width/height for layout stability, and the configured focal
+ * point applied through object-position (mobile and desktop variants).
+ */
+import type { Photo } from '@config/media';
+import { buildResponsiveSet } from '../lib/responsive';
+
+interface Props {
+  photo: Photo;
+  alt: string;
+  /** `sizes` attribute describing the rendered width. */
+  sizes: string;
+  /** Candidate widths; capped at the source width. */
+  widths?: number[];
+  priority?: boolean;
+  class?: string;
+}
+
+const { photo, alt, sizes, widths = [480, 768, 1080, 1400], priority = false, class: className } = Astro.props;
+
+const set = await buildResponsiveSet(photo.image, widths);
+const style = `--focal-mobile:${photo.focalMobile.x}% ${photo.focalMobile.y}%;--focal-desktop:${photo.focalDesktop.x}% ${photo.focalDesktop.y}%`;
+---
+
+<picture>
+  <source type="image/avif" srcset={set.avif} sizes={sizes} />
+  <source type="image/webp" srcset={set.webp} sizes={sizes} />
+  <img
+    src={set.fallbackSrc}
+    srcset={set.fallbackSrcset}
+    sizes={sizes}
+    width={set.width}
+    height={set.height}
+    alt={alt}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding={priority ? 'sync' : 'async'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    class:list={['photo-img', className]}
+    style={style}
+  />
+</picture>
+
+<style is:global>
+  .photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focal-mobile);
+  }
+
+  @media (min-width: 48em) {
+    .photo-img {
+      object-position: var(--focal-desktop);
+    }
+  }
+</style>

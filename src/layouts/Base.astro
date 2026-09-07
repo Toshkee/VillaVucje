@@ -1,0 +1,147 @@
+---
+import '@fontsource/lora/latin-400.css';
+import '@fontsource/lora/latin-ext-400.css';
+import '@fontsource/lora/latin-500.css';
+import '@fontsource/lora/latin-ext-500.css';
+import '@fontsource/source-sans-3/latin-400.css';
+import '@fontsource/source-sans-3/latin-ext-400.css';
+import '@fontsource/source-sans-3/latin-600.css';
+import '@fontsource/source-sans-3/latin-ext-600.css';
+import '@styles/global.css';
+
+import { SITE_URL } from '@config/site';
+import { langTag, localePath, locales, ogLocale, t, type Locale } from '@config/i18n';
+import { activeProviders, property, social } from '@config/property';
+import { photoByRole } from '@config/media';
+import { getHeroSources, HERO_LANDSCAPE_MEDIA, HERO_PORTRAIT_MEDIA } from '../lib/hero';
+import { getImage } from 'astro:assets';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+const lang = langTag[locale];
+const path = localePath[locale];
+
+const absolute = (p: string): string | undefined => (SITE_URL ? `${SITE_URL}${p}` : undefined);
+const canonical = absolute(path);
+const ogImage = absolute('/og-villa-vucje.jpg');
+
+/** Structured data: only facts published by the owner. Geo is omitted until verified. */
+const heroImage = await getImage({ src: photoByRole('hero').image, width: 1600, format: 'jpg' });
+const heroSources = await getHeroSources();
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'VacationRental',
+  name: property.name,
+  description: tr.meta.description,
+  ...(canonical ? { url: canonical } : {}),
+  ...(absolute(heroImage.src) ? { image: [absolute(heroImage.src)] } : {}),
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: property.town,
+    postalCode: property.postalCode,
+    addressCountry: property.countryCode,
+    streetAddress: property.locality,
+  },
+  ...(property.geo.verified
+    ? {
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: property.geo.latitude,
+          longitude: property.geo.longitude,
+        },
+      }
+    : {}),
+  occupancy: { '@type': 'QuantitativeValue', maxValue: property.capacity.value },
+  numberOfBedrooms: property.bedrooms.value,
+  numberOfBathroomsTotal: property.bathrooms.value,
+  floorSize: { '@type': 'QuantitativeValue', value: property.floorAreaM2.value, unitCode: 'MTK' },
+  amenityFeature: property.amenities.map((key) => ({
+    '@type': 'LocationFeatureSpecification',
+    name: tr.amenities[key],
+    value: true,
+  })),
+  checkinTime: property.houseRules.checkInFrom,
+  checkoutTime: property.houseRules.checkOutUntil,
+  petsAllowed: property.houseRules.pets,
+  smokingAllowed: property.houseRules.smoking,
+  sameAs: [social.instagram.url, ...activeProviders.map((p) => p.url)],
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{tr.meta.title}</title>
+    <meta name="description" content={tr.meta.description} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f5f1e8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="generator" content={Astro.generator} />
+
+    {/* Early hint for the LCP image; AVIF-only so unsupporting browsers ignore it. */}
+    {
+      heroSources.portrait && (
+        <link
+          rel="preload"
+          as="image"
+          type="image/avif"
+          fetchpriority="high"
+          imagesrcset={heroSources.portrait.avif}
+          imagesizes="100vw"
+          media={HERO_PORTRAIT_MEDIA}
+        />
+      )
+    }
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      fetchpriority="high"
+      imagesrcset={heroSources.landscape.avif}
+      imagesizes="100vw"
+      media={heroSources.portrait ? HERO_LANDSCAPE_MEDIA : undefined}
+    />
+
+    {canonical && <link rel="canonical" href={canonical} />}
+    {
+      SITE_URL &&
+        locales.map((l) => <link rel="alternate" hreflang={langTag[l]} href={`${SITE_URL}${localePath[l]}`} />)
+    }
+    {SITE_URL && <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${localePath.sr}`} />}
+    {SITE_URL && <link rel="sitemap" href="/sitemap-index.xml" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={property.name} />
+    <meta property="og:title" content={tr.meta.title} />
+    <meta property="og:description" content={tr.meta.description} />
+    <meta property="og:locale" content={ogLocale[locale]} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:width" content="1200" />}
+    {ogImage && <meta property="og:image:height" content="630" />}
+    {ogImage && <meta property="og:image:alt" content={tr.photos.exterior} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>
+      // Progressive enhancement flags: motion opt-in and a JS hook for reveals.
+      document.documentElement.classList.add('js');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('reduced-motion');
+      }
+    </script>
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{tr.meta.skipToContent}</a>
+    <slot />
+  </body>
+</html>

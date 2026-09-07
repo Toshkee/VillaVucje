@@ -1,0 +1,97 @@
+---
+import { t, type Locale } from '@config/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+const items = [
+  tr.facts.location,
+  tr.facts.guests,
+  tr.facts.bedrooms,
+  tr.facts.bathrooms,
+  tr.facts.area,
+  tr.facts.parking,
+];
+---
+
+<section class="facts container" aria-labelledby="facts-title" data-reveal>
+  <h2 id="facts-title" class="visually-hidden">{tr.facts.heading}</h2>
+  <dl class="facts-row">
+    {
+      items.map((item) => (
+        <div class="fact">
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>
+
+<style>
+  .facts {
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .facts-row {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.5rem;
+    border-top: 1px solid var(--stone-line);
+    border-bottom: 1px solid var(--stone-line);
+  }
+
+  .fact {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--stone-line);
+  }
+
+  .fact:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  dt {
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sage-text);
+  }
+
+  dd {
+    margin: 0.2rem 0 0;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--charcoal);
+  }
+
+  @media (min-width: 48em) {
+    .facts-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .fact:nth-last-child(-n + 3) {
+      border-bottom: 0;
+    }
+  }
+
+  @media (min-width: 60em) {
+    .facts-row {
+      grid-template-columns: 1.3fr 0.8fr 1fr 0.9fr 1fr 1.5fr;
+      gap: 0 1.5rem;
+    }
+
+    .fact {
+      border-bottom: 0;
+      padding: 1.4rem 0;
+    }
+
+    .fact + .fact {
+      border-left: 1px solid var(--stone-line);
+      padding-left: 1.5rem;
+    }
+  }
+</style>

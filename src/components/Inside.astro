@@ -1,0 +1,155 @@
+---
+import { anchors, t, type Locale } from '@config/i18n';
+import { property } from '@config/property';
+import { photoByRole } from '@config/media';
+import Photo from './Photo.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+const large = photoByRole('inside-large');
+const detail = photoByRole('inside-detail');
+---
+
+<section id={anchors[locale].house} class="section inside" aria-labelledby="inside-title">
+  <div class="container">
+    <div class="inside-grid">
+      <div class="inside-text" data-reveal>
+        <span class="eyebrow">{tr.inside.label}</span>
+        <h2 id="inside-title">{tr.inside.heading}</h2>
+        {tr.inside.body.map((p) => <p>{p}</p>)}
+      </div>
+
+      <figure class="photo inside-large" data-reveal>
+        <Photo
+          photo={large}
+          alt={tr.photos.livingDining}
+          sizes="(min-width: 60em) 56vw, 100vw"
+        />
+      </figure>
+
+      <figure class="photo inside-detail" data-reveal data-reveal-delay="90">
+        <Photo
+          photo={detail}
+          alt={tr.photos.fireplace}
+          sizes="(min-width: 60em) 32vw, 100vw"
+          widths={[480, 768, 1080]}
+        />
+      </figure>
+    </div>
+
+    <div class="amenities" data-reveal>
+      <h3>{tr.inside.amenitiesHeading}</h3>
+      <ul>
+        {property.amenities.map((key) => <li>{tr.amenities[key]}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .inside-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .inside-text {
+    max-width: 40rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .inside-text h2 + p {
+    margin-top: 1.1rem;
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  .inside-large {
+    aspect-ratio: 3 / 2;
+  }
+
+  .inside-detail {
+    aspect-ratio: 4 / 5;
+    max-height: 32rem;
+  }
+
+  .amenities {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--stone-line);
+  }
+
+  .amenities h3 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sage-text);
+  }
+
+  /* Phones: a quiet two-column list. Wider screens: one dot-separated line. */
+  .amenities ul {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem 1.5rem;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+  }
+
+  @media (min-width: 48em) {
+    .amenities ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0;
+    }
+
+    .amenities li {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .amenities li + li::before {
+      content: '·';
+      color: var(--sage);
+      margin: 0 0.8rem;
+    }
+  }
+
+  @media (min-width: 60em) {
+    .inside-grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto auto;
+      gap: 2rem 2.5rem;
+      align-items: end;
+    }
+
+    .inside-text {
+      grid-column: 1 / 8;
+      grid-row: 1;
+      align-self: start;
+      margin-bottom: 1rem;
+    }
+
+    .inside-large {
+      grid-column: 1 / 8;
+      grid-row: 2;
+    }
+
+    /* Narrow portrait detail, bottom-aligned with the large photograph. */
+    .inside-detail {
+      grid-column: 8 / 13;
+      grid-row: 1 / 3;
+      max-height: none;
+      aspect-ratio: 4 / 5;
+    }
+  }
+</style>

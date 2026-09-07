@@ -1,0 +1,144 @@
+---
+import { localePath, otherLocale, t, type Locale } from '@config/i18n';
+import { contact, property, social } from '@config/property';
+import ExternalIcon from './ExternalIcon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+const other = otherLocale(locale);
+const year = new Date().getFullYear();
+const hasContact = Boolean(contact.email || contact.phone || contact.whatsapp);
+---
+
+<footer class="site-footer" data-bar-stop>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="footer-name">Villa Vučje</p>
+        <p class="muted">{tr.footer.tagline}</p>
+        <p class="muted">{property.locality}, {property.postalCode} {property.town}, {property.countryName[locale]}</p>
+      </div>
+
+      {
+        hasContact && (
+          <div>
+            <h2 class="footer-heading">{tr.footer.contactHeading}</h2>
+            <ul class="footer-list">
+              {contact.email && (
+                <li>
+                  <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                </li>
+              )}
+              {contact.phone && (
+                <li>
+                  <a href={`tel:${contact.phone.replace(/\s+/g, '')}`}>{contact.phone}</a>
+                </li>
+              )}
+              {contact.whatsapp && (
+                <li>
+                  <a href={`https://wa.me/${contact.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                    WhatsApp
+                  </a>
+                </li>
+              )}
+            </ul>
+          </div>
+        )
+      }
+
+      <div>
+        <h2 class="footer-heading">{tr.footer.followHeading}</h2>
+        <ul class="footer-list">
+          <li>
+            <a href={social.instagram.url} target="_blank" rel="noopener noreferrer">
+              {tr.footer.instagram} · @{social.instagram.handle}
+              <ExternalIcon />
+              <span class="visually-hidden">({tr.cta.newTab})</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="footer-heading">{tr.footer.languageHeading}</h2>
+        <ul class="footer-list">
+          <li>
+            <a href={localePath[other]} hreflang={other} lang={other}>
+              {tr.meta.switchLabel}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer-legal muted">© {year} {property.name}. {tr.footer.rights}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: clamp(2.5rem, 4vw, 4rem) 0 2rem;
+    border-top: 1px solid var(--stone-line);
+    font-size: var(--text-small);
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .footer-name {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    color: var(--forest);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-brand p + p {
+    margin-top: 0.25rem;
+  }
+
+  .footer-heading {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sage-text);
+    margin-bottom: 0.6rem;
+  }
+
+  .footer-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+  }
+
+  .footer-legal {
+    max-width: none;
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--stone-line);
+  }
+
+  @media (min-width: 48em) {
+    .footer-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+
+    .footer-grid > div:nth-child(n + 4) {
+      grid-column: auto;
+    }
+  }
+</style>

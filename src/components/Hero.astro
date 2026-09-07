@@ -1,0 +1,266 @@
+---
+import { anchors, t, type Locale } from '@config/i18n';
+import { primaryProvider } from '@config/property';
+import { heroVideo, photoByRole } from '@config/media';
+import { getHeroSources, HERO_PORTRAIT_MEDIA } from '../lib/hero';
+import ExternalIcon from './ExternalIcon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+const hero = photoByRole('hero');
+const { landscape, portrait } = await getHeroSources();
+const heroStyle = `--focal-mobile:${hero.focalMobile.x}% ${hero.focalMobile.y}%;--focal-desktop:${hero.focalDesktop.x}% ${hero.focalDesktop.y}%`;
+const a = anchors[locale];
+const videoLabels =
+  locale === 'sr' ? { pause: 'Zaustavi video', play: 'Pokreni video' } : { pause: 'Pause video', play: 'Play video' };
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-media" data-hero-video={heroVideo ? '' : undefined}>
+    {/* Art direction: a hand-made portrait crop on phones, the full frame from 48em up. */}
+    <picture>
+      {portrait && <source media={HERO_PORTRAIT_MEDIA} type="image/avif" srcset={portrait.avif} sizes="100vw" />}
+      {portrait && <source media={HERO_PORTRAIT_MEDIA} type="image/webp" srcset={portrait.webp} sizes="100vw" />}
+      {portrait && (
+        <source media={HERO_PORTRAIT_MEDIA} type="image/jpeg" srcset={portrait.fallbackSrcset} sizes="100vw" />
+      )}
+      <source type="image/avif" srcset={landscape.avif} sizes="100vw" />
+      <source type="image/webp" srcset={landscape.webp} sizes="100vw" />
+      <img
+        src={landscape.fallbackSrc}
+        srcset={landscape.fallbackSrcset}
+        sizes="100vw"
+        width={landscape.width}
+        height={landscape.height}
+        alt={tr.photos.exterior}
+        loading="eager"
+        decoding="sync"
+        fetchpriority="high"
+        class="photo-img hero-img"
+        style={heroStyle}
+      />
+    </picture>
+    {
+      heroVideo && (
+        <>
+          <video class="hero-video" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1">
+            {heroVideo.webm && <source data-src={heroVideo.webm} type="video/webm" />}
+            <source data-src={heroVideo.mp4} type="video/mp4" />
+          </video>
+          <button
+            class="video-toggle"
+            type="button"
+            hidden
+            data-video-toggle
+            data-label-pause={videoLabels.pause}
+            data-label-play={videoLabels.play}
+          >
+            {videoLabels.pause}
+          </button>
+        </>
+      )
+    }
+  </div>
+
+  <div class="container">
+    <div class="hero-panel">
+      <p class="eyebrow hero-in">{tr.hero.location}</p>
+      <h1 id="hero-title" class="hero-in">{tr.hero.title}</h1>
+      <p class="lede hero-in">{tr.hero.lede}</p>
+      <div class="hero-actions hero-in">
+        {
+          primaryProvider && (
+            <a
+              class="btn btn-primary"
+              href={primaryProvider.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-hero-cta
+            >
+              {tr.cta.booking}
+              <ExternalIcon />
+              <span class="visually-hidden">({tr.cta.newTab})</span>
+            </a>
+          )
+        }
+        <a class="text-link" href={`#${a.house}`}>{tr.cta.explore}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+  }
+
+  .hero-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    max-height: 72vh;
+    max-height: 72svh;
+    overflow: hidden;
+    background: var(--stone);
+  }
+
+  .hero-media picture {
+    display: contents;
+  }
+
+  .hero-media .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* The portrait crop is already composed; keep it centred. */
+  .hero-media .hero-img {
+    object-position: 50% 50%;
+  }
+
+  @media (min-width: 48em) {
+    .hero-media .hero-img {
+      object-position: var(--focal-desktop);
+    }
+  }
+
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease);
+  }
+
+  .hero-media.is-playing .hero-video {
+    opacity: 1;
+  }
+
+  .video-toggle {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 2;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.9rem;
+    background: rgba(245, 241, 232, 0.92);
+    color: var(--forest);
+    border: 0;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .hero-panel {
+    position: relative;
+    padding-top: 1.75rem;
+    padding-bottom: 0.5rem;
+    max-width: 38rem;
+  }
+
+  .hero-panel h1 {
+    margin-top: 0.25rem;
+  }
+
+  .hero-panel .lede {
+    margin-top: 1.1rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.6rem;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  @media (min-width: 30em) {
+    .hero-actions .btn {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 48em) {
+    .hero-media {
+      aspect-ratio: 16 / 9;
+      max-height: 70vh;
+    }
+  }
+
+  /* Desktop: the ivory text panel overlaps the bottom-left of the photograph,
+     so the house and its green roof stay uncovered. */
+  @media (min-width: 60em) {
+    .hero-media {
+      aspect-ratio: auto;
+      height: clamp(30rem, 74vh, 46rem);
+      max-height: none;
+    }
+
+    .hero-panel {
+      margin-top: -7.5rem;
+      max-width: 40rem;
+      padding: 2.5rem 3rem 0 0;
+      background: var(--ivory);
+    }
+
+    .hero-panel::before {
+      /* Bridges the gap between panel and viewport edge on the left. */
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: calc(100% - 1px);
+      width: 50vw;
+      background: var(--ivory);
+    }
+  }
+
+  /* Entrance: short, small travel, three steps at most. */
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .hero-in {
+    animation: hero-in var(--dur-slow) var(--ease) both;
+  }
+
+  .hero-in:nth-child(2) {
+    animation-delay: 70ms;
+  }
+
+  .hero-in:nth-child(3) {
+    animation-delay: 140ms;
+  }
+
+  .hero-in:nth-child(4) {
+    animation-delay: 200ms;
+  }
+</style>
+
+{
+  heroVideo && (
+    <script>
+      import { initHeroVideo } from '@scripts/hero-video';
+      initHeroVideo();
+    </script>
+  )
+}

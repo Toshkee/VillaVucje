@@ -1,0 +1,68 @@
+---
+import { t, type Locale } from '@config/i18n';
+import { photoByRole } from '@config/media';
+import Photo from './Photo.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+const garden = photoByRole('outside');
+---
+
+<section class="section section-band outside" aria-labelledby="outside-title">
+  <div class="container">
+    <div class="outside-grid">
+      <figure class="photo outside-photo" data-reveal>
+        <Photo
+          photo={garden}
+          alt={tr.photos.garden}
+          sizes="(min-width: 60em) 62vw, 100vw"
+          widths={[640, 960, 1280, 1600]}
+        />
+      </figure>
+      <div class="outside-text" data-reveal data-reveal-delay="80">
+        <span class="eyebrow">{tr.outside.label}</span>
+        <h2 id="outside-title">{tr.outside.heading}</h2>
+        {tr.outside.body.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .outside-grid {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  .outside-photo {
+    aspect-ratio: 16 / 10;
+  }
+
+  .outside-text h2 + p {
+    margin-top: 1.1rem;
+  }
+
+  @media (min-width: 60em) {
+    .outside-grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: clamp(2.5rem, 5vw, 5rem);
+      align-items: center;
+    }
+
+    .outside-photo {
+      aspect-ratio: 16 / 11;
+      /* Bleed to the left edge of the viewport while the text stays in the grid. */
+      margin-left: calc(-1 * max(var(--gutter), (100vw - var(--container)) / 2));
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+</style>

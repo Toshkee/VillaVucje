@@ -1,0 +1,284 @@
+---
+import { getImage } from 'astro:assets';
+import { anchors, t, type Locale } from '@config/i18n';
+import { galleryPhotos } from '@config/media';
+import { clampWidths } from '../lib/responsive';
+import Photo from './Photo.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+
+/** Large WebP renditions for the lightbox; never wider than the original. */
+const slides = await Promise.all(
+  galleryPhotos.map(async (photo) => {
+    const widths = clampWidths([1080, 1600, 2000], photo.image.width);
+    const full = await getImage({ src: photo.image, widths, format: 'webp', quality: 80 });
+    return { photo, full };
+  }),
+);
+---
+
+<section id={anchors[locale].gallery} class="section gallery" aria-labelledby="gallery-title">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">{tr.gallery.label}</span>
+      <h2 id="gallery-title">{tr.gallery.heading}</h2>
+    </div>
+
+    <ul class="gallery-grid">
+      {
+        slides.map(({ photo, full }, i) => (
+          <li class:list={['gallery-item', { 'is-wide': i === 0, 'is-tall': i === 1 }]} data-reveal>
+            <button
+              type="button"
+              class="gallery-button photo"
+              data-gallery-open
+              data-full-src={full.src}
+              data-full-srcset={full.srcSet.attribute}
+              data-full-width={photo.image.width}
+              data-full-height={photo.image.height}
+              data-caption={tr.captions[photo.key]}
+            >
+              <Photo
+                photo={photo}
+                alt={tr.photos[photo.key]}
+                sizes={i === 0 ? '(min-width: 60em) 50vw, 100vw' : '(min-width: 60em) 30vw, 100vw'}
+                widths={[480, 768, 1080]}
+              />
+              <span class="visually-hidden">{tr.gallery.open}: </span>
+              <span class="gallery-caption" aria-hidden="true">
+                {tr.captions[photo.key]}
+              </span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <dialog class="lightbox" data-lightbox aria-label={tr.gallery.dialogLabel}>
+    <div class="lightbox-inner on-dark">
+      <div class="lightbox-top">
+        <span class="lightbox-counter" data-lightbox-counter data-of={tr.gallery.counterOf} aria-live="polite"></span>
+        <button type="button" class="lightbox-btn" data-lightbox-close>
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M4 4l12 12M16 4 4 16"></path>
+          </svg>
+          <span class="visually-hidden">{tr.gallery.close}</span>
+        </button>
+      </div>
+
+      <div class="lightbox-stage" data-lightbox-stage>
+        <img data-lightbox-image alt="" decoding="async" />
+      </div>
+
+      <div class="lightbox-bottom">
+        <button type="button" class="lightbox-btn" data-lightbox-prev>
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4 6 10l6 6"></path>
+          </svg>
+          <span class="visually-hidden">{tr.gallery.prev}</span>
+        </button>
+        <p class="lightbox-caption" data-lightbox-caption></p>
+        <button type="button" class="lightbox-btn" data-lightbox-next>
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m8 4 6 6-6 6"></path>
+          </svg>
+          <span class="visually-hidden">{tr.gallery.next}</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<style>
+  .gallery-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .gallery-item {
+    aspect-ratio: 3 / 2;
+  }
+
+  .gallery-button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    cursor: zoom-in;
+    text-align: left;
+  }
+
+  .gallery-button :global(picture),
+  .gallery-button :global(img) {
+    width: 100%;
+    height: 100%;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+
+  .gallery-button:hover :global(img) {
+    transform: scale(1.025);
+  }
+
+  .gallery-button:focus-visible {
+    outline-offset: 4px;
+  }
+
+  .gallery-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.55rem 0.85rem;
+    font-size: var(--text-small);
+    color: var(--ivory);
+    background: linear-gradient(to top, rgba(37, 41, 34, 0.55), rgba(37, 41, 34, 0));
+    pointer-events: none;
+  }
+
+  @media (min-width: 40em) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gallery-item.is-wide {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 60em) {
+    .gallery-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+
+    .gallery-item {
+      grid-column: span 2;
+    }
+
+    .gallery-item.is-wide {
+      grid-column: span 4;
+      aspect-ratio: 3 / 2;
+    }
+
+    .gallery-item.is-tall {
+      grid-column: span 2;
+      aspect-ratio: auto;
+    }
+  }
+
+  /* ---- Lightbox ---------------------------------------------------- */
+
+  .lightbox {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ivory);
+    overflow: hidden;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(31, 35, 29, 0.95);
+  }
+
+  .lightbox-inner {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: 100%;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .lightbox-top,
+  .lightbox-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem var(--gutter);
+  }
+
+  .lightbox-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .lightbox-counter {
+    font-size: var(--text-small);
+    color: rgba(245, 241, 232, 0.8);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lightbox-caption {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    color: var(--ivory);
+  }
+
+  .lightbox-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex: none;
+    padding: 0;
+    background: rgba(245, 241, 232, 0.1);
+    color: var(--ivory);
+    border: 1px solid rgba(245, 241, 232, 0.35);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+
+  .lightbox-btn:hover {
+    background: rgba(245, 241, 232, 0.2);
+    border-color: var(--ivory);
+  }
+
+  .lightbox-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .lightbox-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    padding: 0 var(--gutter);
+    touch-action: pan-y;
+  }
+
+  .lightbox-stage img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: var(--radius);
+    background: rgba(245, 241, 232, 0.06);
+  }
+</style>
+
+<script>
+  import { initGallery } from '@scripts/gallery';
+  initGallery();
+</script>

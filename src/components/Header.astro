@@ -1,0 +1,287 @@
+---
+import { anchors, localePath, otherLocale, t, type Locale } from '@config/i18n';
+import { primaryProvider } from '@config/property';
+import ExternalIcon from './ExternalIcon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+const other = otherLocale(locale);
+const base = localePath[locale];
+const a = anchors[locale];
+
+const links = [
+  { href: `${base}#${a.house}`, label: tr.nav.house },
+  { href: `${base}#${a.gallery}`, label: tr.nav.gallery },
+  { href: `${base}#${a.location}`, label: tr.nav.location },
+];
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a class="wordmark" href={base} aria-label="Villa Vučje">
+      <svg class="mark" aria-hidden="true" viewBox="0 0 28 22" fill="none">
+        <path d="M2 14 14 3l12 11" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+        <path d="M6 12.5V20h16v-7.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+      </svg>
+      <span>Villa Vučje</span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-menu-toggle
+      data-label-open={tr.nav.menuOpen}
+      data-label-close={tr.nav.menuClose}
+    >
+      <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
+      <span data-menu-label>{tr.nav.menuOpen}</span>
+    </button>
+
+    <nav id="site-nav" class="nav" aria-label={tr.nav.menuAria} data-nav>
+      <ul class="nav-list">
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} data-nav-link>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="nav-lang">
+          <a href={localePath[other]} hreflang={other} lang={other} aria-label={tr.meta.switchAria} data-nav-link>
+            {tr.meta.switchLabel}
+          </a>
+        </li>
+        {
+          primaryProvider && (
+            <li class="nav-cta">
+              <a class="btn btn-primary" href={primaryProvider.url} target="_blank" rel="noopener noreferrer">
+                {tr.cta.booking}
+                <ExternalIcon />
+                <span class="visually-hidden">({tr.cta.newTab})</span>
+              </a>
+            </li>
+          )
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(245, 241, 232, 0.94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--stone-line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4rem;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--forest);
+    text-decoration: none;
+    min-height: 2.75rem;
+  }
+
+  .wordmark:hover {
+    color: var(--forest-deep);
+  }
+
+  .mark {
+    width: 1.5rem;
+    height: auto;
+    color: var(--forest);
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.2rem 0.4rem 0.6rem;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--forest);
+  }
+
+  .menu-icon {
+    position: relative;
+    width: 1.25rem;
+    height: 0.9rem;
+  }
+
+  .menu-icon span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transition: transform var(--dur-fast) var(--ease), top var(--dur-fast) var(--ease);
+  }
+
+  .menu-icon span:first-child {
+    top: 0;
+  }
+
+  .menu-icon span:last-child {
+    top: calc(100% - 2px);
+  }
+
+  .menu-toggle[aria-expanded='true'] .menu-icon span:first-child {
+    top: calc(50% - 1px);
+    transform: rotate(45deg);
+  }
+
+  .menu-toggle[aria-expanded='true'] .menu-icon span:last-child {
+    top: calc(50% - 1px);
+    transform: rotate(-45deg);
+  }
+
+  /* Mobile: the nav drops below the bar as a plain list. */
+  .nav {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--ivory);
+    border-bottom: 1px solid var(--stone-line);
+    box-shadow: 0 12px 24px -16px rgba(37, 41, 34, 0.35);
+  }
+
+  .nav.is-open {
+    display: block;
+  }
+
+  /* Without JavaScript the toggle is hidden and the nav is always visible. */
+  html:not(.js) .menu-toggle {
+    display: none;
+  }
+
+  html:not(.js) .nav {
+    display: block;
+    position: static;
+    box-shadow: none;
+    border: 0;
+  }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem var(--gutter) 1.25rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-list a:not(.btn) {
+    display: flex;
+    align-items: center;
+    min-height: 3rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--forest);
+    border-bottom: 1px solid var(--stone-line);
+  }
+
+  .nav-cta {
+    margin-top: 1rem;
+  }
+
+  .nav-cta .btn {
+    width: 100%;
+  }
+
+  @media (min-width: 60em) {
+    .menu-toggle {
+      display: none;
+    }
+
+    .nav {
+      display: block;
+      position: static;
+      background: none;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .nav-list {
+      flex-direction: row;
+      align-items: center;
+      gap: 1.75rem;
+      padding: 0;
+    }
+
+    .nav-list a:not(.btn) {
+      border: 0;
+      min-height: 2.75rem;
+      position: relative;
+    }
+
+    .nav-list a:not(.btn)::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.5rem;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--dur-fast) var(--ease);
+    }
+
+    .nav-list a:not(.btn):hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-lang {
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--stone-line);
+    }
+
+    .nav-lang a {
+      padding-left: 1rem;
+    }
+
+    .nav-cta {
+      margin: 0 0 0 0.5rem;
+    }
+
+    .nav-cta .btn {
+      width: auto;
+      min-height: 2.75rem;
+      padding-block: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  import { initNav } from '@scripts/nav';
+  initNav();
+</script>

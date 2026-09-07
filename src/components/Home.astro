@@ -1,0 +1,40 @@
+---
+import type { Locale } from '@config/i18n';
+import Base from '@layouts/Base.astro';
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import Facts from './Facts.astro';
+import Inside from './Inside.astro';
+import Outside from './Outside.astro';
+import Gallery from './Gallery.astro';
+import Location from './Location.astro';
+import BookingSection from './BookingSection.astro';
+import Footer from './Footer.astro';
+import BookingBar from './BookingBar.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Base locale={locale}>
+  <Header locale={locale} />
+  <main id="main">
+    <Hero locale={locale} />
+    <Facts locale={locale} />
+    <Inside locale={locale} />
+    <Outside locale={locale} />
+    <Gallery locale={locale} />
+    <Location locale={locale} />
+    <BookingSection locale={locale} />
+  </main>
+  <Footer locale={locale} />
+  <BookingBar locale={locale} />
+</Base>
+
+<script>
+  import { initReveal } from '@scripts/reveal';
+  initReveal();
+</script>

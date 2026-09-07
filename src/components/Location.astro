@@ -1,0 +1,91 @@
+---
+import { anchors, t, type Locale } from '@config/i18n';
+import { mapUrl } from '@config/property';
+import ExternalIcon from './ExternalIcon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+---
+
+<section id={anchors[locale].location} class="section location" aria-labelledby="location-title">
+  <div class="container">
+    <div class="location-grid">
+      <div class="location-text" data-reveal>
+        <span class="eyebrow">{tr.location.label}</span>
+        <h2 id="location-title">{tr.location.heading}</h2>
+        {tr.location.body.map((p) => <p>{p}</p>)}
+      </div>
+
+      <div class="location-card" data-reveal data-reveal-delay="80">
+        <dl>
+          <dt>{tr.location.addressLabel}</dt>
+          <dd>{tr.location.address}</dd>
+        </dl>
+        <a class="btn btn-secondary" href={mapUrl} target="_blank" rel="noopener noreferrer">
+          {tr.location.mapLink}
+          <ExternalIcon />
+          <span class="visually-hidden">({tr.cta.newTab})</span>
+        </a>
+        <p class="muted small">{tr.location.mapNote}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .location-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .location-text h2 + p {
+    margin-top: 1.1rem;
+  }
+
+  .location-card {
+    padding: 1.5rem;
+    border: 1px solid var(--stone-line);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+  }
+
+  .location-card dl {
+    margin: 0;
+  }
+
+  .location-card dt {
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sage-text);
+  }
+
+  .location-card dd {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+  }
+
+  .small {
+    font-size: var(--text-small);
+  }
+
+  @media (min-width: 60em) {
+    .location-grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: clamp(2.5rem, 5vw, 5rem);
+      align-items: start;
+    }
+
+    .location-card {
+      padding: 2rem;
+    }
+  }
+</style>
