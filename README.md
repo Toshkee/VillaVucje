@@ -1,6 +1,6 @@
 # Villa Vučje — website
 
-Static marketing site for Villa Vučje, a mountain holiday house in Crkvine near Kolašin, Montenegro. Built with Astro (static output, TypeScript strict), bespoke scoped CSS and a few small native scripts. There is no booking engine: guests are sent to the property's own Booking.com listing.
+Static marketing site for Villa Vučje, a mountain holiday house in Crkvine near Kolašin, Montenegro. Built with Astro (static output, TypeScript strict), bespoke scoped CSS and a few small native scripts. There is no booking engine: guests are sent to the property's Booking.com or Airbnb listing.
 
 Default language is Montenegrin/Serbian (Latin) at `/`, with English at `/en/`.
 
@@ -60,7 +60,7 @@ All copy is in `src/config/i18n.ts`. The English object must have the same shape
 
 `https://www.booking.com/hotel/me/villa-vucje-near-kolasin.html`
 
-An Airbnb entry is already present with an empty URL and `verified: false`, so nothing renders for it yet. A web search on 2026‑09‑07 found no Airbnb listing for this house ("Vučje Brdo" in Blatina is a different property). Paste the direct listing URL (`https://www.airbnb.com/rooms/<id>`), open it to confirm it is the right house, set `verified: true`, and the "View on Airbnb" button appears in the booking section and the mobile bar automatically. The hero uses the first verified provider (Booking.com).
+The owner supplied the Airbnb listing on 2026-09-07: `https://www.airbnb.com/rooms/1402289748098090516`. Dates, guest counts and tracking parameters are omitted. Both providers appear in the hero, booking section and mobile bar; the header keeps Booking.com as its primary link. Airbnb ownership is confirmed by the supplied link; automated page fetching was unavailable.
 
 ### Contact details
 
@@ -81,6 +81,8 @@ Copy `.env.example` to `.env` and set `SITE_URL=https://your-domain` (no trailin
 
 ## Design notes
 
+- The September design refresh removes repeated section labels and decorative dividers, enlarges the headings, and uses more conversational copy in both languages. Buttons, gallery controls, and native `<details>` disclosures take interaction cues from [Sona UI](https://www.sonaui.com/components); these are independent Astro/CSS adaptations, with no React or animation-library dependency. Disclosures work with the keyboard and without JavaScript, with progressive height animation and reduced-motion support.
+- The hero uses the garden photograph with ivory text directly over a directional dark gradient. Its height grows with the content; there is no overlapping cream panel. `getHeroSources()` supplies a build-time portrait crop for mobile, shared with the preload hints.
 - Palette: ivory `#F5F1E8`, deep forest `#243E32`, sage `#8B9986` (darkened to `#5B6A57` for text), stone `#D8D0C1`, rust `#AD6143` (darkened to `#97523A` for text), charcoal `#252922`. Contrast ratios were measured, not assumed: charcoal/ivory 13.1, forest/ivory 10.3, sage‑text/ivory 5.1, rust‑text/ivory 5.2, ivory/forest 10.3. Raw sage (2.7) and raw rust (4.1) on ivory are used only decoratively.
 - Type: Lora 400/500 for headings, Source Sans 3 400/600 for body and UI, self-hosted through `@fontsource` with Latin Extended subsets (needed for č, ć, đ, š, ž).
 - Motion: one short hero entrance, a single IntersectionObserver-driven reveal, hover/focus feedback. Everything is visible without JavaScript and with `prefers-reduced-motion`.
@@ -116,7 +118,7 @@ Facts marked "Booking" were read from the Booking.com listing on 2026‑09‑07 
 - [ ] Confirm the amenity list in `property.ts` (fireplace, garden, terrace, balcony, kitchen, BBQ, free parking, Wi‑Fi, washing machine, dishwasher) and the house rules (check-in 14:00–21:00, check-out 08:00–11:00, no smoking, no pets, no parties).
 - [ ] Confirm "about 9 km from the centre of Kolašin" (from the host text on Booking). No Podgorica driving time is published.
 - [ ] Confirm the map pin (currently the Booking.com pin, 42.798722, 19.45032) and then set `geo.verified = true`.
-- [ ] Airbnb listing URL (requested by the owner; not found by search, see "Booking links" above).
+- [x] Airbnb listing URL supplied by the owner and added (see "Booking links" above).
 - [ ] Contact email / phone / WhatsApp for the footer.
 - [ ] Production domain → `SITE_URL`; then verify `sitemap-index.xml`, `robots.txt`, `hreflang` and the social preview.
 - [ ] More photographs: kitchen, bedrooms, bathrooms, balcony, a winter exterior, and full-resolution originals of the five supplied (they are 1600 px exports). The yard photo was supplied sideways and has been rotated; its device metadata was stripped.

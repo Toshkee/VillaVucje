@@ -18,7 +18,6 @@ const detail = photoByRole('inside-detail');
   <div class="container">
     <div class="inside-grid">
       <div class="inside-text" data-reveal>
-        <span class="eyebrow">{tr.inside.label}</span>
         <h2 id="inside-title">{tr.inside.heading}</h2>
         {tr.inside.body.map((p) => <p>{p}</p>)}
       </div>
@@ -81,47 +80,30 @@ const detail = photoByRole('inside-detail');
   .amenities {
     margin-top: clamp(2rem, 4vw, 3rem);
     padding-top: 1.5rem;
-    border-top: 1px solid var(--stone-line);
   }
 
   .amenities h3 {
     font-family: var(--font-sans);
     font-weight: 600;
-    font-size: var(--text-label);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 1rem;
     color: var(--sage-text);
   }
 
-  /* Phones: a quiet two-column list. Wider screens: one dot-separated line. */
   .amenities ul {
     list-style: none;
     margin: 0.9rem 0 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.45rem 1.5rem;
-    font-family: var(--font-serif);
-    font-size: 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    font-size: 1rem;
   }
 
-  @media (min-width: 48em) {
-    .amenities ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 0;
-    }
-
-    .amenities li {
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .amenities li + li::before {
-      content: '·';
-      color: var(--sage);
-      margin: 0 0.8rem;
-    }
+  .amenities li {
+    padding: 0.55rem 1rem;
+    border-radius: 0.6rem;
+    background: var(--ivory-deep);
+    color: var(--forest);
   }
 
   @media (min-width: 60em) {

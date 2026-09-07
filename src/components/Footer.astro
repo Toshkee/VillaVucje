@@ -82,7 +82,6 @@ const hasContact = Boolean(contact.email || contact.phone || contact.whatsapp);
 <style>
   .site-footer {
     padding: clamp(2.5rem, 4vw, 4rem) 0 2rem;
-    border-top: 1px solid var(--stone-line);
     font-size: var(--text-small);
   }
 
@@ -93,7 +92,8 @@ const hasContact = Boolean(contact.email || contact.phone || contact.whatsapp);
 
   .footer-name {
     font-family: var(--font-serif);
-    font-size: 1.35rem;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    letter-spacing: -0.04em;
     color: var(--forest);
     margin-bottom: 0.5rem;
   }
@@ -105,9 +105,7 @@ const hasContact = Boolean(contact.email || contact.phone || contact.whatsapp);
   .footer-heading {
     font-family: var(--font-sans);
     font-weight: 600;
-    font-size: var(--text-label);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 1rem;
     color: var(--sage-text);
     margin-bottom: 0.6rem;
   }

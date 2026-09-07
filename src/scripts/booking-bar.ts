@@ -12,12 +12,12 @@ export function initBookingBar(): void {
   const stops = document.querySelectorAll<HTMLElement>('[data-bar-stop]');
   const mobile = window.matchMedia('(max-width: 59.99em)');
 
-  let heroVisible = true;
+  let heroPassed = false;
   let stopVisible = false;
   let dialogOpen = false;
 
   const render = (): void => {
-    const show = mobile.matches && !heroVisible && !stopVisible && !dialogOpen;
+    const show = mobile.matches && heroPassed && !stopVisible && !dialogOpen;
     bar.classList.toggle('is-visible', show);
     bar.setAttribute('aria-hidden', String(!show));
     bar.inert = !show;
@@ -25,15 +25,19 @@ export function initBookingBar(): void {
   };
 
   const heroObserver = new IntersectionObserver(
-    (entries) => {
-      const entry = entries[0];
-      if (!entry) return;
-      heroVisible = entry.isIntersecting;
+    () => {
+      // A CTA below the viewport has not been reached yet. Only show the
+      // fixed bar once the visitor has scrolled past it, above the viewport.
+      heroPassed = heroCta.getBoundingClientRect().bottom <= 0;
       render();
     },
     { threshold: 0 },
   );
   heroObserver.observe(heroCta);
+  // Also observe the section so an anchor jump from before to after the CTA
+  // updates the bar even when the button never intersects the viewport.
+  const hero = heroCta.closest('.hero');
+  if (hero) heroObserver.observe(hero);
 
   if (stops.length > 0) {
     const visible = new Set<Element>();

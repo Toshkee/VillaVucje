@@ -10,14 +10,13 @@ interface Props {
 const { locale } = Astro.props;
 const tr = t(locale);
 const labels = { booking: tr.cta.booking, airbnb: tr.cta.airbnb } as const;
-const rules = [tr.booking.checkIn, tr.booking.checkOut, tr.booking.noSmoking, tr.booking.noPets, tr.booking.noParties];
+const rules = [tr.booking.noSmoking, tr.booking.noPets, tr.booking.noParties];
 ---
 
 <section id={anchors[locale].booking} class="section booking on-dark" aria-labelledby="booking-title" data-bar-stop>
   <div class="container">
     <div class="booking-grid">
       <div class="booking-text" data-reveal>
-        <span class="eyebrow">{tr.booking.label}</span>
         <h2 id="booking-title">{tr.booking.heading}</h2>
         <p>{tr.booking.body}</p>
         {
@@ -41,10 +40,22 @@ const rules = [tr.booking.checkIn, tr.booking.checkOut, tr.booking.noSmoking, tr
       </div>
 
       <div class="booking-rules" data-reveal data-reveal-delay="80">
-        <h3>{tr.booking.rulesHeading}</h3>
-        <ul>
-          {rules.map((rule) => <li>{rule}</li>)}
-        </ul>
+        <details name="stay-info" open>
+          <summary>{tr.booking.arrivalHeading}<span class="disclosure-icon" aria-hidden="true"></span></summary>
+          <div class="disclosure-content">
+            <p>{tr.booking.checkIn}<br />{tr.booking.checkOut}</p>
+          </div>
+        </details>
+        <details name="stay-info">
+          <summary>{tr.booking.rulesHeading}<span class="disclosure-icon" aria-hidden="true"></span></summary>
+          <div class="disclosure-content">
+            <ul>{rules.map((rule) => <li>{rule}</li>)}</ul>
+          </div>
+        </details>
+        <details name="stay-info">
+          <summary>{tr.booking.reservationHeading}<span class="disclosure-icon" aria-hidden="true"></span></summary>
+          <div class="disclosure-content"><p>{tr.booking.body}</p></div>
+        </details>
       </div>
     </div>
   </div>
@@ -56,13 +67,10 @@ const rules = [tr.booking.checkIn, tr.booking.checkOut, tr.booking.noSmoking, tr
     color: var(--ivory);
   }
 
-  .booking .eyebrow,
-  .booking-rules h3 {
-    color: var(--stone);
-  }
-
   .booking h2 {
     color: var(--ivory);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: -0.04em;
   }
 
   .booking p {
@@ -86,23 +94,89 @@ const rules = [tr.booking.checkIn, tr.booking.checkOut, tr.booking.noSmoking, tr
     width: 100%;
   }
 
-  .booking-rules h3 {
-    font-family: var(--font-sans);
-    font-weight: 600;
-    font-size: var(--text-label);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  /* Sona UI disclosure pattern, implemented with native keyboard-accessible details. */
+  .booking-rules details {
+    margin-bottom: 0.6rem;
+    padding: 0 1.25rem;
+    background: rgb(245 241 232 / 7%);
+    border-radius: var(--radius);
+    transition: background var(--dur) var(--ease);
+  }
+
+  .booking-rules details[open] {
+    background: rgb(245 241 232 / 11%);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .disclosure-icon {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+  }
+
+  .disclosure-icon::before,
+  .disclosure-icon::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 1px);
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .disclosure-icon::after {
+    transform: rotate(90deg);
+  }
+
+  details[open] .disclosure-icon::after {
+    transform: rotate(0);
+  }
+
+  .disclosure-content {
+    padding-bottom: 1.25rem;
+  }
+
+  .disclosure-content p {
+    margin: 0;
+  }
+
+  @supports (interpolate-size: allow-keywords) {
+    details::details-content {
+      interpolate-size: allow-keywords;
+      height: 0;
+      overflow: clip;
+      transition: height var(--dur) var(--ease), content-visibility var(--dur) allow-discrete;
+    }
+
+    details[open]::details-content {
+      height: auto;
+    }
   }
 
   .booking-rules ul {
     list-style: none;
-    margin: 0.75rem 0 0;
+    margin: 0;
     padding: 0;
   }
 
   .booking-rules li {
-    padding: 0.55rem 0;
-    border-top: 1px solid rgba(245, 241, 232, 0.16);
+    padding: 0.25rem 0;
     color: rgba(245, 241, 232, 0.9);
   }
 

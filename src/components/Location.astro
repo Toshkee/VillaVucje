@@ -15,7 +15,6 @@ const tr = t(locale);
   <div class="container">
     <div class="location-grid">
       <div class="location-text" data-reveal>
-        <span class="eyebrow">{tr.location.label}</span>
         <h2 id="location-title">{tr.location.heading}</h2>
         {tr.location.body.map((p) => <p>{p}</p>)}
       </div>
@@ -48,7 +47,7 @@ const tr = t(locale);
 
   .location-card {
     padding: 1.5rem;
-    border: 1px solid var(--stone-line);
+    background: var(--ivory-deep);
     border-radius: var(--radius);
     display: flex;
     flex-direction: column;
@@ -61,9 +60,7 @@ const tr = t(locale);
   }
 
   .location-card dt {
-    font-size: var(--text-label);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 1rem;
     color: var(--sage-text);
   }
 

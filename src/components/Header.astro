@@ -83,7 +83,7 @@ const links = [
     background: rgba(245, 241, 232, 0.94);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--stone-line);
+    box-shadow: 0 2px 14px rgb(26 47 37 / 5%);
   }
 
   .bar {
@@ -91,7 +91,7 @@ const links = [
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    min-height: 4rem;
+    min-height: 4.5rem;
   }
 
   .wordmark {
@@ -99,7 +99,7 @@ const links = [
     align-items: center;
     gap: 0.6rem;
     font-family: var(--font-serif);
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 500;
     letter-spacing: 0.01em;
     color: var(--forest);
@@ -171,7 +171,7 @@ const links = [
     right: 0;
     top: 100%;
     background: var(--ivory);
-    border-bottom: 1px solid var(--stone-line);
+    border-radius: 0 0 var(--radius) var(--radius);
     box-shadow: 0 12px 24px -16px rgba(37, 41, 34, 0.35);
   }
 
@@ -206,7 +206,8 @@ const links = [
     font-weight: 600;
     text-decoration: none;
     color: var(--forest);
-    border-bottom: 1px solid var(--stone-line);
+    border-radius: 0.6rem;
+    padding-inline: 0.75rem;
   }
 
   .nav-cta {
@@ -243,26 +244,12 @@ const links = [
       position: relative;
     }
 
-    .nav-list a:not(.btn)::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0.5rem;
-      height: 1px;
-      background: currentColor;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform var(--dur-fast) var(--ease);
-    }
-
-    .nav-list a:not(.btn):hover::after {
-      transform: scaleX(1);
+    .nav-list a:not(.btn):hover {
+      background: var(--ivory-deep);
     }
 
     .nav-lang {
       padding-left: 0.5rem;
-      border-left: 1px solid var(--stone-line);
     }
 
     .nav-lang a {

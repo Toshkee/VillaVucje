@@ -25,7 +25,6 @@ const slides = await Promise.all(
 <section id={anchors[locale].gallery} class="section gallery" aria-labelledby="gallery-title">
   <div class="container">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">{tr.gallery.label}</span>
       <h2 id="gallery-title">{tr.gallery.heading}</h2>
     </div>
 
@@ -53,6 +52,7 @@ const slides = await Promise.all(
               <span class="gallery-caption" aria-hidden="true">
                 {tr.captions[photo.key]}
               </span>
+              <span class="gallery-expand" aria-hidden="true">↗</span>
             </button>
           </li>
         ))
@@ -138,11 +138,30 @@ const slides = await Promise.all(
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 0.55rem 0.85rem;
+    padding: 2.5rem 1.25rem 1.1rem;
     font-size: var(--text-small);
     color: var(--ivory);
-    background: linear-gradient(to top, rgba(37, 41, 34, 0.55), rgba(37, 41, 34, 0));
+    background: linear-gradient(to top, rgba(37, 41, 34, 0.8), rgba(37, 41, 34, 0));
     pointer-events: none;
+  }
+
+  .gallery-expand {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--ivory);
+    color: var(--forest);
+    font-size: 1.25rem;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .gallery-button:hover .gallery-expand {
+    transform: rotate(45deg);
   }
 
   @media (min-width: 40em) {

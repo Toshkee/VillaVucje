@@ -33,7 +33,7 @@ const capacity = property.capacity.value;
 const sr = {
   meta: {
     title: 'Villa Vučje – kuća za odmor u Crkvinama kod Kolašina',
-    description: `Villa Vučje je planinska kuća od drveta i kamena u Crkvinama kod Kolašina, za do ${capacity} gostiju, sa kaminom, dvorištem i terasom s pogledom na planine. Rezervacija preko Booking.com-a.`,
+    description: `Villa Vučje je planinska kuća od drveta i kamena u Crkvinama kod Kolašina, za do ${capacity} gostiju, sa kaminom, dvorištem i terasom s pogledom na planine. Rezervacija preko Booking.com-a ili Airbnb-a.`,
     switchLabel: 'English',
     switchAria: 'Read this page in English',
     skipToContent: 'Pređi na sadržaj',
@@ -53,8 +53,8 @@ const sr = {
     newTab: 'otvara se u novom prozoru',
   },
   hero: {
-    location: 'Crkvine · Kolašin · Crna Gora',
-    title: 'Planinska kuća od drveta i kamena, nadomak Kolašina.',
+    location: 'Crkvine, Kolašin, Crna Gora',
+    title: 'Vaša kuća u planinama.',
     lede: `Cijela kuća za do ${capacity} gostiju, sa kaminom, ograđenim dvorištem i terasom s pogledom na okolne planine.`,
   },
   facts: {
@@ -67,24 +67,21 @@ const sr = {
     parking: { label: 'Parking', value: 'besplatan, uz kuću' },
   },
   inside: {
-    label: 'Unutra',
-    heading: 'Dnevni boravak uz kamin',
+    heading: 'Svi na okupu, uz kamin.',
     body: [
-      'Zidovi obloženi borovinom, kamin od prirodnog kamena i fotelje boje rđe uz svijetli ugaoni kauč: dnevni boravak je mjesto gdje se provode večeri.',
-      'Trpezarija i kuhinja dijele isti otvoreni prostor, a prozori i vrata terase gledaju na dvorište i brda iznad Crkvina.',
+      'U dnevnoj sobi ima mjesta da se svi smjestite. Tu su veliki ugaoni kauč, fotelje i kameni kamin za hladne večeri.',
+      'Kuhinja i trpezarija su u istom prostoru, pa ste zajedno i dok spremate večeru. Kroz prozore se vide dvorište i brda iznad Crkvina.',
     ],
     amenitiesHeading: 'U kući',
   },
   outside: {
-    label: 'Napolju',
-    heading: 'Dvorište, terasa i pogled na planine',
+    heading: 'Kafa se pije napolju.',
     body: [
-      'Kuću okružuju kameni zid, travnato dvorište i kamenom popločana terasa. Ljeti se dan provodi napolju, uz roštilj i pogled na vrhove oko Kolašina.',
-      'U hladnijem dijelu godine kuća je baza za skijalište na Bjelasici i zimske šetnje, uz kamin koji čeka po povratku.',
+      'Iz kuće izlazite na kamenu terasu i travnato dvorište, ograđeno kamenim zidom. Ispred vas su planine, a ljeti ima mjesta za ručak i roštilj na otvorenom.',
+      'Zimi možete do skijališta na Bjelasici, pa nazad u toplu kuću.',
     ],
   },
   gallery: {
-    label: 'Galerija',
     heading: 'Kuća u slikama',
     open: 'Otvori uvećanu fotografiju',
     close: 'Zatvori galeriju',
@@ -94,7 +91,6 @@ const sr = {
     dialogLabel: 'Galerija fotografija',
   },
   location: {
-    label: 'Lokacija',
     heading: 'Crkvine, kod Kolašina',
     body: [
       `Crkvine su mirno naselje u sjevernoj Crnoj Gori, oko ${property.distanceToKolasinKm.value} km od centra Kolašina.`,
@@ -106,9 +102,10 @@ const sr = {
     mapNote: 'Tačnu lokaciju i uputstva za dolazak dobijate uz potvrdu rezervacije.',
   },
   booking: {
-    label: 'Rezervacija',
-    heading: 'Rezervišite svoj boravak',
-    body: 'Cijene, slobodni termini i uslovi otkazivanja su uvijek ažurni na stranici oglasa. Rezervacija se obavlja direktno kod izabranog provajdera.',
+    heading: 'Kad dolazite?',
+    body: 'Izaberite datume na Booking.com-u ili Airbnb-u i pogledajte cijenu za svoj boravak. Tamo možete provjeriti slobodne termine, uslove otkazivanja i rezervisati kuću.',
+    arrivalHeading: 'Dolazak i odlazak',
+    reservationHeading: 'Kako rezervisati?',
     rulesHeading: 'Kućni red',
     checkIn: `Prijava ${property.houseRules.checkInFrom}–${property.houseRules.checkInUntil}`,
     checkOut: `Odjava ${property.houseRules.checkOutFrom}–${property.houseRules.checkOutUntil}`,
@@ -160,7 +157,7 @@ export type Translation = typeof sr;
 const en: Translation = {
   meta: {
     title: 'Villa Vučje – holiday house in Crkvine near Kolašin, Montenegro',
-    description: `Villa Vučje is a timber-and-stone mountain house in Crkvine near Kolašin, Montenegro, for up to ${capacity} guests, with a fireplace, a walled garden and a terrace with mountain views. Book on Booking.com.`,
+    description: `Villa Vučje is a timber-and-stone mountain house in Crkvine near Kolašin, Montenegro, for up to ${capacity} guests, with a fireplace, a walled garden and a terrace with mountain views. Book on Booking.com or Airbnb.`,
     switchLabel: 'Srpski',
     switchAria: 'Pročitajte ovu stranicu na srpskom',
     skipToContent: 'Skip to content',
@@ -180,8 +177,8 @@ const en: Translation = {
     newTab: 'opens in a new tab',
   },
   hero: {
-    location: 'Crkvine · Kolašin · Montenegro',
-    title: 'A timber-and-stone mountain house, a short drive from Kolašin.',
+    location: 'Crkvine, Kolašin, Montenegro',
+    title: 'Your home in the mountains.',
     lede: `The whole house for up to ${capacity} guests, with a fireplace, a walled garden and a terrace looking out to the surrounding mountains.`,
   },
   facts: {
@@ -194,24 +191,21 @@ const en: Translation = {
     parking: { label: 'Parking', value: 'free, on site' },
   },
   inside: {
-    label: 'Inside',
-    heading: 'A living room built around the fireplace',
+    heading: 'Room for everyone by the fire.',
     body: [
-      'Pine-clad walls, a natural-stone fireplace and rust-coloured armchairs beside a pale corner sofa: the living room is where evenings are spent.',
-      'The dining table and kitchen share the same open space, and the windows and terrace doors look out to the garden and the hills above Crkvine.',
+      'There is room to settle in together, with a large corner sofa, armchairs and a stone fireplace for cold evenings.',
+      'The kitchen and dining table share the living space, so whoever is cooking stays part of the conversation. The windows look onto the garden and the hills above Crkvine.',
     ],
     amenitiesHeading: 'In the house',
   },
   outside: {
-    label: 'Outside',
-    heading: 'Garden, terrace and mountain views',
+    heading: 'Take your coffee outside.',
     body: [
-      'A stone wall, a lawn and a stone-paved terrace surround the house. In summer the day moves outdoors, with the barbecue and a view of the peaks around Kolašin.',
-      'In the colder months the house is a base for the ski slopes on Bjelasica and winter walks, with the fireplace waiting when you get back.',
+      'Step onto the stone terrace and into a lawn enclosed by a stone wall. The mountains are right in front of you, with space for lunch and a barbecue outdoors in summer.',
+      'In winter, head to the ski slopes on Bjelasica and come back to a warm house.',
     ],
   },
   gallery: {
-    label: 'Gallery',
     heading: 'The house in pictures',
     open: 'Open enlarged photo',
     close: 'Close gallery',
@@ -221,7 +215,6 @@ const en: Translation = {
     dialogLabel: 'Photo gallery',
   },
   location: {
-    label: 'Location',
     heading: 'Crkvine, near Kolašin',
     body: [
       `Crkvine is a quiet village in northern Montenegro, about ${property.distanceToKolasinKm.value} km from the centre of Kolašin.`,
@@ -233,9 +226,10 @@ const en: Translation = {
     mapNote: 'The exact location and arrival directions come with your booking confirmation.',
   },
   booking: {
-    label: 'Booking',
-    heading: 'Book your stay',
-    body: 'Prices, availability and cancellation terms are always up to date on the listing page. Booking is completed directly with the provider you choose.',
+    heading: 'When are you coming?',
+    body: 'Choose your dates on Booking.com or Airbnb to see the price for your stay. You can check availability, read the cancellation terms and book the house there.',
+    arrivalHeading: 'Arrival and departure',
+    reservationHeading: 'How do I book?',
     rulesHeading: 'House rules',
     checkIn: `Check-in ${property.houseRules.checkInFrom}–${property.houseRules.checkInUntil}`,
     checkOut: `Check-out ${property.houseRules.checkOutFrom}–${property.houseRules.checkOutUntil}`,

@@ -79,7 +79,7 @@ export interface BookingProvider {
   id: 'booking' | 'airbnb';
   /** Direct link to THIS property's listing. */
   url: string;
-  /** Verified to resolve to the correct listing (date noted in README). */
+  /** Confirmed by the owner or checked against the listing (noted in README). */
   verified: boolean;
 }
 
@@ -90,12 +90,12 @@ export const bookingProviders: readonly BookingProvider[] = [
     url: 'https://www.booking.com/hotel/me/villa-vucje-near-kolasin.html',
     verified: true,
   },
-  // Airbnb: the owner has asked for an Airbnb link, but no listing URL has been
-  // supplied and a web search on 2026-09-07 found no Airbnb listing for this house
-  // ("Vučje Brdo" in Blatina is a different property). Paste the direct listing
-  // URL (https://www.airbnb.com/rooms/<id>) here and set verified: true once it
-  // has been opened and checked; the button then appears everywhere automatically.
-  { id: 'airbnb', url: '', verified: false },
+  {
+    id: 'airbnb',
+    // Listing supplied by the owner on 2026-09-07; dates and tracking removed.
+    url: 'https://www.airbnb.com/rooms/1402289748098090516',
+    verified: true,
+  },
 ];
 
 /** Providers that are safe to show to guests. */
@@ -103,7 +103,7 @@ export const activeProviders: readonly BookingProvider[] = bookingProviders.filt
   (p) => p.verified && p.url.startsWith('https://'),
 );
 
-/** Primary provider used by the hero CTA and the mobile booking bar. */
+/** Primary provider used by the header CTA. */
 export const primaryProvider: BookingProvider | undefined = activeProviders[0];
 
 export const social = {

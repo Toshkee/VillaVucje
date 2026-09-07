@@ -19,12 +19,12 @@ const labels = { booking: tr.cta.booking, airbnb: tr.cta.airbnb } as const;
         <a
           class:list={['btn', i === 0 ? 'btn-light' : 'btn-outline-light']}
           href={provider.url}
+          aria-label={`${labels[provider.id]} (${tr.cta.newTab})`}
           target="_blank"
           rel="noopener noreferrer"
         >
-          {labels[provider.id]}
+          {provider.id === 'booking' ? 'Booking.com' : 'Airbnb'}
           <ExternalIcon />
-          <span class="visually-hidden">({tr.cta.newTab})</span>
         </a>
       ))}
     </div>
@@ -49,6 +49,8 @@ const labels = { booking: tr.cta.booking, airbnb: tr.cta.airbnb } as const;
 
   .booking-bar .btn {
     flex: 1;
+    min-width: 0;
+    padding-inline: 0.65rem;
     min-height: 2.85rem;
   }
 
