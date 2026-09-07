@@ -15,11 +15,17 @@ Default language is Montenegrin/Serbian (Latin) at `/`, with English at `/en/`.
 | `npm run preview` | Serve the built `dist/` locally.                                 |
 | `npm run validate`| `check` followed by `build`.                                     |
 
-The lockfile is `package-lock.json`. Deploy `dist/` to any static host or CDN (Netlify, Cloudflare Pages, Vercel static, GitHub Pages, an nginx bucket). No server runtime is needed.
+The lockfile is `package-lock.json`. Deploy `dist/` to any static host or CDN (Cloudflare, Netlify, GitHub Pages, an nginx bucket). No server runtime is needed.
 
-### Vercel
+### Cloudflare
 
-Use `nvm use` to select Node 24, then `npm ci`. `vercel.json` selects Astro, builds with `npm run build`, and publishes `dist/`. Deploy with `vercel --prod` after linking the project. Vercel's production domain is used automatically for canonical URLs, language alternates and the sitemap; set `SITE_URL` to override it with your preferred domain. Local Vercel project metadata is ignored by Git.
+The site is deployed to Cloudflare Workers as static assets (`wrangler.jsonc` publishes `dist/`). `public/_headers` sets long-lived caching for `/_astro/*` and revalidation for everything else.
+
+- One-off deploy from your machine: `nvm use`, `npm ci`, `npx wrangler login`, then `npm run deploy`.
+- Git-connected deploys: in the Cloudflare dashboard go to Workers & Pages → Create → Workers → import `Toshkee/VillaVucje`. Build command `npm run build`, deploy command `npx wrangler deploy`. Every push to `main` deploys; other branches get preview URLs.
+- Local check of the production bundle on the Workers runtime: `npm run preview:cf`.
+
+Once the domain is bought (Cloudflare Registrar), add it under the Worker's Settings → Domains & Routes → Custom domain. Cloudflare creates the DNS record and certificate. Then set `SITE_URL=https://<domain>` in the Worker's build variables (or in `.env` for local builds) so canonical URLs, hreflang, Open Graph and the sitemap are emitted. `.wrangler/` local state is ignored by Git.
 
 ## Where things live
 

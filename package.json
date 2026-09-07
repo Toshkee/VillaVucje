@@ -13,7 +13,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "validate": "npm run check && npm run build",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "npm run build && wrangler deploy",
+    "preview:cf": "npm run build && wrangler dev"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "wrangler": "^4.129.0"
   }
 }
