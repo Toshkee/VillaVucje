@@ -29,12 +29,12 @@ The site is deployed to Cloudflare Workers as static assets (`wrangler.jsonc` pu
 
 The domain is `villavucje.me`, registered at Namecheap. It is the default origin in `src/config/site.ts`, so no environment variable is needed for a production build.
 
-To serve it from the Worker, the zone has to be on Cloudflare DNS:
+DNS is on Cloudflare (zone `villavucje.me`, Free plan); the Namecheap nameservers were replaced with `anita.ns.cloudflare.com` and `nick.ns.cloudflare.com`. The Namecheap parking A/CNAME records were removed; the MX and SPF records for Namecheap email forwarding were kept.
 
-1. Cloudflare dashboard → Add a site → `villavucje.me` (Free plan) → Cloudflare shows two nameservers.
-2. Namecheap → Domain List → Manage → Nameservers → Custom DNS → paste both, save. Propagation is usually minutes, up to 24 h.
-3. Worker → Settings → Domains & Routes → Add custom domain → `villavucje.me`, then again for `www.villavucje.me`. Cloudflare creates the records and the certificate.
-4. Optional: a Cloudflare redirect rule from `www.villavucje.me/*` to `https://villavucje.me/$1` (301) keeps one canonical host.
+Both hostnames are attached to the Worker by the `routes` block in `wrangler.jsonc`, so `wrangler deploy` recreates them if the zone is ever rebuilt. Two settings live in the dashboard instead:
+
+- Rules → Redirect Rules: `https://www.*` → `https://${1}` (301, query string preserved), so the apex is the single canonical host.
+- SSL/TLS → Edge Certificates → Always Use HTTPS: on.
 
 `.wrangler/` local state is ignored by Git.
 

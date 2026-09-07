@@ -2,9 +2,17 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "villavucje",
   "compatibility_date": "2026-09-01",
+  // Keep the *.workers.dev URL alive as a fallback and preview host.
+  "workers_dev": true,
   "assets": {
     "directory": "./dist",
     "html_handling": "force-trailing-slash",
     "not_found_handling": "404-page"
-  }
+  },
+  // Custom domains. www is served too so it resolves; a zone redirect rule
+  // sends it to the apex, which is the canonical host in src/config/site.ts.
+  "routes": [
+    { "pattern": "villavucje.me", "custom_domain": true },
+    { "pattern": "www.villavucje.me", "custom_domain": true }
+  ]
 }
