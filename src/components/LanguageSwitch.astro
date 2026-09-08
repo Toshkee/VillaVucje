@@ -1,0 +1,85 @@
+---
+/**
+ * Both languages side by side with the current one marked, so the control
+ * reads as a choice. A single link to the other language looked like a label
+ * for the page you were already on.
+ */
+import { langTag, localeBadge, localeName, localePath, locales, t, type Locale } from '@config/i18n';
+
+interface Props {
+  locale: Locale;
+  /** `badge` fits the header bar (CG / EN); `full` spells the languages out. */
+  variant?: 'badge' | 'full';
+}
+
+const { locale, variant = 'badge' } = Astro.props;
+const tr = t(locale);
+const labelFor = (l: Locale): string => (variant === 'badge' ? localeBadge[l] : localeName[l]);
+---
+
+<div class:list={['lang-switch', `is-${variant}`]} role="group" aria-label={tr.nav.langAria}>
+  {
+    locales.map((l) =>
+      l === locale ? (
+        <span class="lang-option is-current" aria-current="true">
+          {labelFor(l)}
+          <span class="visually-hidden"> — {tr.meta.switchTo[l]}</span>
+        </span>
+      ) : (
+        <a class="lang-option" href={localePath[l]} hreflang={langTag[l]} lang={langTag[l]} aria-label={tr.meta.switchTo[l]} data-nav-link>
+          {labelFor(l)}
+        </a>
+      ),
+    )
+  }
+</div>
+
+<style>
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.2rem;
+    border: 1px solid var(--stone-line);
+    border-radius: 999px;
+  }
+
+  /* Beats the header's own `.nav-list a` rule, which sets its own metrics. */
+  .lang-switch .lang-option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding-inline: 0.85rem;
+    border-radius: 999px;
+    font-size: var(--text-small);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--sage-text);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+
+  .lang-switch .is-current {
+    background: var(--forest);
+    color: var(--ivory);
+  }
+
+  .lang-switch a.lang-option:hover {
+    background: var(--ivory-deep);
+    color: var(--forest);
+  }
+
+  .lang-switch a.lang-option:focus-visible {
+    outline: 2px solid var(--forest);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 60em) {
+    .lang-switch .lang-option {
+      min-height: 2.1rem;
+      padding-inline: 0.7rem;
+    }
+  }
+</style>

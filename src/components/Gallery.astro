@@ -31,7 +31,11 @@ const slides = await Promise.all(
     <ul class="gallery-grid">
       {
         slides.map(({ photo, full }, i) => (
-          <li class:list={['gallery-item', { 'is-wide': i === 0, 'is-tall': i === 1 }]} data-reveal>
+          <li
+            class:list={['gallery-item', { 'is-wide': i === 0, 'is-tall': i === 1 }]}
+            data-reveal
+            data-reveal-delay={i < 2 ? undefined : String(((i - 2) % 3) * 70)}
+          >
             <button
               type="button"
               class="gallery-button photo"
@@ -143,6 +147,11 @@ const slides = await Promise.all(
     color: var(--ivory);
     background: linear-gradient(to top, rgba(37, 41, 34, 0.8), rgba(37, 41, 34, 0));
     pointer-events: none;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .gallery-button:hover .gallery-caption {
+    transform: translateY(-3px);
   }
 
   .gallery-expand {

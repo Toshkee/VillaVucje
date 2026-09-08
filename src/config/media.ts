@@ -156,7 +156,7 @@ export const photos: readonly Photo[] = [
     key: 'garden',
     file: 'garden-view.jpg',
     image: garden,
-    roles: ['hero', 'outside', 'gallery'],
+    roles: ['outside', 'gallery'],
     focalMobile: { x: 45, y: 50 },
     focalDesktop: { x: 50, y: 50 },
     season: 'summer',
@@ -165,7 +165,7 @@ export const photos: readonly Photo[] = [
     key: 'exteriorWinter',
     file: 'exterior-winter.jpg',
     image: exteriorWinter,
-    roles: ['gallery'],
+    roles: ['hero'],
     focalMobile: { x: 46, y: 42 },
     focalDesktop: { x: 48, y: 45 },
     season: 'winter',
@@ -187,18 +187,23 @@ export function photoByRole(role: PhotoRole): Photo {
   return photo;
 }
 
-/** Gallery order walks through the house without repeating section photographs. */
+/**
+ * Gallery order walks through the house without repeating section photographs.
+ * It opens inside, on the room the house is sold on, and steps out to the yard
+ * and the street at the end; the first two entries carry the wide and tall
+ * tiles of the grid.
+ */
 export const galleryOrder: readonly PhotoKey[] = [
-  'exterior',
+  'livingDining',
   'doubleBedroom',
   'twinBedroom',
   'bathroom',
-  'livingDining',
+  'livingRoom',
   'diningDetail',
   'staircaseEntry',
   'bedroomHallway',
-  'livingRoom',
-  'exteriorWinter',
+  'exterior',
+  'garden',
 ];
 
 export const galleryPhotos: readonly Photo[] = galleryOrder.map((key) => {

@@ -22,6 +22,20 @@ export const localePath: Record<Locale, string> = {
   en: '/en/',
 };
 
+/**
+ * Each language written in itself, so the switch reads the same on both pages,
+ * plus the short badge the header uses where a full word would crowd the bar.
+ */
+export const localeName: Record<Locale, string> = {
+  sr: 'Crnogorski',
+  en: 'English',
+};
+
+export const localeBadge: Record<Locale, string> = {
+  sr: 'CG',
+  en: 'EN',
+};
+
 /** Localized in-page anchor ids, so URLs read naturally in each language. */
 export const anchors: Record<Locale, { house: string; gallery: string; location: string; booking: string }> = {
   sr: { house: 'kuca', gallery: 'galerija', location: 'lokacija', booking: 'rezervacija' },
@@ -34,8 +48,10 @@ const sr = {
   meta: {
     title: 'Villa Vučje – kuća za odmor u Crkvinama kod Kolašina',
     description: `Villa Vučje je planinska kuća od drveta i kamena u Crkvinama kod Kolašina, za do ${capacity} gostiju, sa kaminom, dvorištem i terasom s pogledom na planine. Rezervacija preko Booking.com-a ili Airbnb-a.`,
-    switchLabel: 'English',
-    switchAria: 'Read this page in English',
+    switchTo: {
+      sr: 'Ova stranica je na crnogorskom',
+      en: 'Pročitajte ovu stranicu na engleskom',
+    },
     skipToContent: 'Pređi na sadržaj',
   },
   nav: {
@@ -45,6 +61,7 @@ const sr = {
     menuOpen: 'Meni',
     menuClose: 'Zatvori meni',
     menuAria: 'Glavna navigacija',
+    langAria: 'Jezik stranice',
   },
   cta: {
     booking: 'Pogledajte na Booking.com-u',
@@ -198,8 +215,10 @@ const en: Translation = {
   meta: {
     title: 'Villa Vučje – holiday house in Crkvine near Kolašin, Montenegro',
     description: `Villa Vučje is a timber-and-stone mountain house in Crkvine near Kolašin, Montenegro, for up to ${capacity} guests, with a fireplace, a walled garden and a terrace with mountain views. Book on Booking.com or Airbnb.`,
-    switchLabel: 'Srpski',
-    switchAria: 'Pročitajte ovu stranicu na srpskom',
+    switchTo: {
+      sr: 'Read this page in Montenegrin',
+      en: 'This page is in English',
+    },
     skipToContent: 'Skip to content',
   },
   nav: {
@@ -209,6 +228,7 @@ const en: Translation = {
     menuOpen: 'Menu',
     menuClose: 'Close menu',
     menuAria: 'Main navigation',
+    langAria: 'Page language',
   },
   cta: {
     booking: 'View on Booking.com',

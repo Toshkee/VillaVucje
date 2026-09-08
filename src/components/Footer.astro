@@ -1,5 +1,6 @@
 ---
-import { localePath, otherLocale, t, type Locale } from '@config/i18n';
+import { t, type Locale } from '@config/i18n';
+import LanguageSwitch from './LanguageSwitch.astro';
 import { contact, property, social } from '@config/property';
 import ExternalIcon from './ExternalIcon.astro';
 
@@ -9,7 +10,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const tr = t(locale);
-const other = otherLocale(locale);
 const year = new Date().getFullYear();
 const hasContact = Boolean(contact.email || contact.phone || contact.whatsapp);
 ---
@@ -65,13 +65,7 @@ const hasContact = Boolean(contact.email || contact.phone || contact.whatsapp);
 
       <div>
         <h2 class="footer-heading">{tr.footer.languageHeading}</h2>
-        <ul class="footer-list">
-          <li>
-            <a href={localePath[other]} hreflang={other} lang={other}>
-              {tr.meta.switchLabel}
-            </a>
-          </li>
-        </ul>
+        <LanguageSwitch locale={locale} variant="full" />
       </div>
     </div>
 

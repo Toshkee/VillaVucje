@@ -1,5 +1,6 @@
 ---
-import { anchors, localePath, otherLocale, t, type Locale } from '@config/i18n';
+import { anchors, localePath, t, type Locale } from '@config/i18n';
+import LanguageSwitch from './LanguageSwitch.astro';
 
 interface Props {
   locale: Locale;
@@ -7,7 +8,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const tr = t(locale);
-const other = otherLocale(locale);
 const base = localePath[locale];
 const a = anchors[locale];
 
@@ -53,9 +53,7 @@ const links = [
           ))
         }
         <li class="nav-lang">
-          <a href={localePath[other]} hreflang={other} lang={other} aria-label={tr.meta.switchAria} data-nav-link>
-            {tr.meta.switchLabel}
-          </a>
+          <LanguageSwitch locale={locale} />
         </li>
         <li class="nav-cta">
           <a class="btn btn-primary" href={`${base}#${a.booking}`} data-nav-link>{tr.cta.availability}</a>
@@ -70,9 +68,7 @@ const links = [
     position: sticky;
     top: 0;
     z-index: 40;
-    background: rgba(245, 241, 232, 0.94);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: var(--ivory);
     box-shadow: 0 2px 14px rgb(26 47 37 / 5%);
   }
 
@@ -200,6 +196,10 @@ const links = [
     padding-inline: 0.75rem;
   }
 
+  .nav-lang {
+    padding: 0.4rem 0.75rem 0.25rem;
+  }
+
   .nav-cta {
     margin-top: 1rem;
   }
@@ -234,16 +234,26 @@ const links = [
       position: relative;
     }
 
-    .nav-list a:not(.btn):hover {
-      background: var(--ivory-deep);
+    .nav-list a:not(.btn)::after {
+      content: '';
+      position: absolute;
+      left: 0.75rem;
+      right: 0.75rem;
+      bottom: 0.45rem;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform var(--dur-fast) var(--ease);
+    }
+
+    .nav-list a:not(.btn):hover::after,
+    .nav-list a:not(.btn):focus-visible::after {
+      transform: scaleX(1);
     }
 
     .nav-lang {
-      padding-left: 0.5rem;
-    }
-
-    .nav-lang a {
-      padding-left: 1rem;
+      padding: 0 0 0 0.5rem;
     }
 
     .nav-cta {

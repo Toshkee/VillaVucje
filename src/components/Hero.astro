@@ -13,13 +13,15 @@ const hero = photoByRole('hero');
 const { landscape, portrait } = await getHeroSources();
 const heroStyle = `--focal-mobile:${hero.focalMobile.x}% ${hero.focalMobile.y}%;--focal-desktop:${hero.focalDesktop.x}% ${hero.focalDesktop.y}%`;
 const a = anchors[locale];
+/** The title lands word by word rather than as one block. */
+const titleWords = tr.hero.title.split(' ');
 const videoLabels =
   locale === 'sr' ? { pause: 'Zaustavi video', play: 'Pokreni video' } : { pause: 'Pause video', play: 'Play video' };
 ---
 
 <section class="hero on-dark" aria-labelledby="hero-title">
   <div class="hero-media" data-hero-video={heroVideo ? '' : undefined}>
-    {/* A portrait rendition on phones keeps the garden and mountain in frame. */}
+    {/* A portrait rendition on phones keeps the house itself in frame. */}
     <picture>
       {portrait && <source media={HERO_PORTRAIT_MEDIA} type="image/avif" srcset={portrait.avif} sizes="100vw" />}
       {portrait && <source media={HERO_PORTRAIT_MEDIA} type="image/webp" srcset={portrait.webp} sizes="100vw" />}
@@ -66,7 +68,18 @@ const videoLabels =
 
   <div class="container hero-content">
     <div class="hero-panel">
-      <h1 id="hero-title" class="hero-in">{tr.hero.title}</h1>
+      <h1 id="hero-title" class="hero-title">
+        {
+          titleWords.map((word, i) => (
+            <Fragment>
+              {i > 0 && ' '}
+              <span class="hero-word" style={`--word:${i}`}>
+                {word}
+              </span>
+            </Fragment>
+          ))
+        }
+      </h1>
       <p class="hero-location hero-in">{tr.hero.location}</p>
       <p class="lede hero-in">{tr.hero.lede}</p>
       <div class="hero-actions hero-in">
@@ -167,6 +180,13 @@ const videoLabels =
     width: 100%;
     max-width: 43rem;
     pointer-events: auto;
+  }
+
+  /* Each word carries the entrance, so the line assembles itself. */
+  .hero-word {
+    display: inline-block;
+    animation: hero-in var(--dur-slow) var(--ease) both;
+    animation-delay: calc(var(--word) * 55ms);
   }
 
   .hero-panel h1 {
