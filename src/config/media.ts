@@ -1,6 +1,7 @@
 import type { ImageMetadata } from 'astro';
 import exterior from '@assets/photos/exterior-house.jpg';
 import exteriorPortrait from '@assets/photos/exterior-house-portrait.jpg';
+import exteriorWinter from '@assets/photos/exterior-winter.jpg';
 import livingDining from '@assets/photos/living-dining.jpg';
 import livingRoom from '@assets/photos/living-room.jpg';
 import fireplace from '@assets/photos/fireplace.jpg';
@@ -21,6 +22,7 @@ import doubleBedroom from '@assets/photos/double-bedroom.jpg';
  */
 export type PhotoKey =
   | 'exterior'
+  | 'exteriorWinter'
   | 'livingDining'
   | 'livingRoom'
   | 'fireplace'
@@ -55,7 +57,7 @@ export interface Photo {
   /** Focal point on wide screens. */
   focalDesktop: Focal;
   /** Season shown, so copy stays truthful. */
-  season: 'summer' | 'late-autumn';
+  season: 'summer' | 'late-autumn' | 'winter';
 }
 
 export const photos: readonly Photo[] = [
@@ -160,6 +162,15 @@ export const photos: readonly Photo[] = [
     season: 'summer',
   },
   {
+    key: 'exteriorWinter',
+    file: 'exterior-winter.jpg',
+    image: exteriorWinter,
+    roles: ['gallery'],
+    focalMobile: { x: 46, y: 42 },
+    focalDesktop: { x: 48, y: 45 },
+    season: 'winter',
+  },
+  {
     key: 'livingRoom',
     file: 'living-room.jpg',
     image: livingRoom,
@@ -187,6 +198,7 @@ export const galleryOrder: readonly PhotoKey[] = [
   'staircaseEntry',
   'bedroomHallway',
   'livingRoom',
+  'exteriorWinter',
 ];
 
 export const galleryPhotos: readonly Photo[] = galleryOrder.map((key) => {

@@ -142,7 +142,7 @@ Facts marked "Booking" were read from the Booking.com listing on 2026‑09‑07 
 - [x] Airbnb listing URL supplied by the owner and added (see "Booking links" above).
 - [ ] Contact email / phone / WhatsApp for the footer.
 - [ ] Point `villavucje.me` at Cloudflare DNS and attach it to the Worker; then verify `sitemap-index.xml`, `robots.txt`, `hreflang` and the social preview.
-- [ ] More photographs: kitchen, bedrooms, bathrooms, balcony, a winter exterior, and full-resolution originals of the five supplied (they are 1600 px exports). The yard photo was supplied sideways and has been rotated; its device metadata was stripped.
+- [ ] More photographs: balcony, and full-resolution originals of the supplied exports (they are 1600 px). A winter exterior was supplied and added to the gallery; it arrived in Display P3 and was converted to sRGB with its device metadata stripped, like the rest. The yard photo was supplied sideways and has been rotated.
 - [ ] Optional: a clean, silent outdoor clip for the hero (see above). No video was supplied, so the site ships with the photo hero.
 - [ ] Decide whether the Booking.com listing name should be aligned with "Villa Vučje" (the listing is titled "Villa Vucje near Kolasin").
 

@@ -173,6 +173,7 @@ const sr = {
     livingRoom: 'Dnevni boravak sa svijetlim ugaonim kaučem, dvije fotelje boje rđe, televizorom na zidu od borovine i kaminom u uglu.',
     fireplace: 'Kamin od prirodnog kamena sa vratima od kovanog gvožđa i naslaganim drvima, ispred njega stakleni sto na postolju od kamena.',
     garden: 'Ljetni pogled iz dvorišta: travnjak, kamenom popločana terasa, crvena drvena ograda i planinski vrhovi pod vedrim nebom.',
+    exteriorWinter: 'Kuća pod snijegom dok pahulje padaju: drvena fasada, zeleni krov i balkon sa girlandom od zelenila, a ispred nje dvorište i kamene stepenice pod snijegom.',
   },
   captions: {
     exterior: 'Kuća s ulice',
@@ -187,6 +188,7 @@ const sr = {
     livingRoom: 'Dnevni boravak',
     fireplace: 'Kamin',
     garden: 'Dvorište ljeti',
+    exteriorWinter: 'Kuća zimi',
   },
 };
 
@@ -335,6 +337,7 @@ const en: Translation = {
     livingRoom: 'Living room with a pale corner sofa, two rust-coloured armchairs, a television on a pine-clad wall and a fireplace in the corner.',
     fireplace: 'Natural-stone fireplace with wrought-iron doors and stacked firewood, with a glass-topped stone coffee table in front.',
     garden: 'Summer view from the garden: lawn, stone-paved terrace, red wooden fence and mountain peaks under a clear sky.',
+    exteriorWinter: 'The house under snow as flakes fall: timber facade, green roof and a balcony hung with an evergreen garland, with the snow-covered garden and stone steps in front.',
   },
   captions: {
     exterior: 'The house from the street',
@@ -349,6 +352,7 @@ const en: Translation = {
     livingRoom: 'Living room',
     fireplace: 'The fireplace',
     garden: 'The garden in summer',
+    exteriorWinter: 'The house in winter',
   },
 };
 
