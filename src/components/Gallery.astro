@@ -24,8 +24,12 @@ const slides = await Promise.all(
 
 <section id={anchors[locale].gallery} class="section gallery" aria-labelledby="gallery-title">
   <div class="container">
-    <div class="section-head" data-reveal>
-      <h2 id="gallery-title">{tr.gallery.heading}</h2>
+    <div class="gallery-head" data-reveal>
+      <h2 id="gallery-title">
+        {tr.gallery.heading}
+        <span class="accent">{tr.gallery.headingAccent}</span>
+      </h2>
+      <p class="gallery-note">{tr.gallery.note}</p>
     </div>
 
     <ul class="gallery-grid">
@@ -49,14 +53,19 @@ const slides = await Promise.all(
               <Photo
                 photo={photo}
                 alt={tr.photos[photo.key]}
-                sizes={i === 0 ? '(min-width: 60em) 50vw, 100vw' : '(min-width: 60em) 30vw, 100vw'}
+                sizes={i === 0 ? '(min-width: 60em) 66vw, 100vw' : '(min-width: 60em) 33vw, (min-width: 40em) 50vw, 100vw'}
                 widths={[480, 768, 1080]}
               />
               <span class="visually-hidden">{tr.gallery.open}: </span>
-              <span class="gallery-caption" aria-hidden="true">
+              <span class="photo-tag" aria-hidden="true">
                 {tr.captions[photo.key]}
               </span>
-              <span class="gallery-expand" aria-hidden="true">↗</span>
+              <span class="gallery-expand" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 11 11 5"></path>
+                  <path d="M6 5h5v5"></path>
+                </svg>
+              </span>
             </button>
           </li>
         ))
@@ -100,6 +109,19 @@ const slides = await Promise.all(
 </section>
 
 <style>
+  .gallery-head {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .gallery-note {
+    max-width: 34ch;
+    font-size: var(--text-lede);
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
   .gallery-grid {
     list-style: none;
     margin: 0;
@@ -109,7 +131,7 @@ const slides = await Promise.all(
   }
 
   .gallery-item {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 3;
   }
 
   .gallery-button {
@@ -126,51 +148,40 @@ const slides = await Promise.all(
   .gallery-button :global(img) {
     width: 100%;
     height: 100%;
-    transition: transform var(--dur-slow) var(--ease);
+    transition: transform 900ms var(--ease);
   }
 
   .gallery-button:hover :global(img) {
-    transform: scale(1.025);
+    transform: scale(1.04);
   }
 
   .gallery-button:focus-visible {
     outline-offset: 4px;
   }
 
-  .gallery-caption {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 2.5rem 1.25rem 1.1rem;
-    font-size: var(--text-small);
-    color: var(--ivory);
-    background: linear-gradient(to top, rgba(37, 41, 34, 0.8), rgba(37, 41, 34, 0));
-    pointer-events: none;
-    transition: transform var(--dur) var(--ease);
-  }
-
-  .gallery-button:hover .gallery-caption {
-    transform: translateY(-3px);
-  }
-
   .gallery-expand {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 0.9rem;
+    right: 0.9rem;
     display: grid;
     place-items: center;
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    background: var(--ivory);
-    color: var(--forest);
-    font-size: 1.25rem;
-    transition: transform var(--dur) var(--ease);
+    background: rgb(250 247 240 / 92%);
+    color: var(--ink);
+    transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+
+  .gallery-expand svg {
+    width: 1rem;
+    height: 1rem;
   }
 
   .gallery-button:hover .gallery-expand {
-    transform: rotate(45deg);
+    background: var(--forest);
+    color: var(--ivory);
+    transform: scale(1.08);
   }
 
   @media (min-width: 40em) {
@@ -184,6 +195,12 @@ const slides = await Promise.all(
   }
 
   @media (min-width: 60em) {
+    .gallery-head {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(3rem, 6vw, 7rem);
+      align-items: end;
+    }
+
     .gallery-grid {
       grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 1.25rem;
@@ -222,7 +239,7 @@ const slides = await Promise.all(
   }
 
   .lightbox::backdrop {
-    background: rgba(31, 35, 29, 0.95);
+    background: rgb(31 35 29 / 95%);
   }
 
   .lightbox-inner {
@@ -255,8 +272,7 @@ const slides = await Promise.all(
   .lightbox-caption {
     flex: 1;
     text-align: center;
-    font-family: var(--font-serif);
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--ivory);
   }
 
@@ -271,7 +287,7 @@ const slides = await Promise.all(
     background: rgba(245, 241, 232, 0.1);
     color: var(--ivory);
     border: 1px solid rgba(245, 241, 232, 0.35);
-    border-radius: var(--radius);
+    border-radius: 999px;
     cursor: pointer;
     transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
   }

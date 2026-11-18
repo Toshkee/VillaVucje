@@ -1,5 +1,7 @@
 ---
 import { t, type Locale } from '@config/i18n';
+import { photoByRole } from '@config/media';
+import Photo from './Photo.astro';
 
 interface Props {
   locale: Locale;
@@ -7,63 +9,69 @@ interface Props {
 
 const { locale } = Astro.props;
 const tr = t(locale);
+const garden = photoByRole('outside');
 ---
 
-<section class="section section-band outside" aria-labelledby="outside-title">
+<section class="outside" aria-labelledby="outside-title">
   <div class="container">
-    <div class="outside-grid">
-      <div class="outside-text" data-reveal>
-        <h2 id="outside-title">{tr.outside.heading}</h2>
-        {tr.outside.body.map((p) => <p>{p}</p>)}
+    <div class="panel on-dark">
+      <div class="panel-text" data-reveal>
+        <h2 id="outside-title">
+          {tr.outside.heading}
+          <span class="accent">{tr.outside.headingAccent}</span>
+        </h2>
+        <div class="split-body">
+          {tr.outside.body.map((p) => <p>{p}</p>)}
+        </div>
+        <ul class="chips">
+          {tr.outside.highlights.map((item) => <li>{item}</li>)}
+        </ul>
       </div>
-      <ul class="outside-highlights" data-reveal data-reveal-delay="80">
-        {tr.outside.highlights.map((item) => <li>{item}</li>)}
-      </ul>
+
+      <div class="panel-photo photo" data-reveal data-reveal-delay="100">
+        <Photo photo={garden} alt={tr.photos[garden.key]} sizes="(min-width: 60em) 46vw, 100vw" />
+        <span class="photo-tag">{tr.captions[garden.key]}</span>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .outside-grid {
+  .panel {
     display: grid;
-    gap: 1.75rem;
+    gap: 2rem;
+    padding: clamp(1.5rem, 5vw, 4.5rem);
+    background: var(--forest);
+    color: var(--cream);
+    border-radius: var(--radius-lg);
   }
 
-  .outside-text {
-    max-width: 42rem;
+  .panel h2 {
+    color: var(--cream);
   }
 
-  .outside-text h2 + p {
-    margin-top: 1.1rem;
+  .split-body {
+    margin-top: 1.5rem;
   }
 
-  .outside-highlights {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 1.5rem;
-    border-bottom: 1px solid var(--stone-line);
+  .chips {
+    margin-top: 2rem;
   }
 
-  .outside-highlights li {
-    display: flex;
-    align-items: center;
-    min-height: 4rem;
-    padding: 0.8rem 0;
-    border-top: 1px solid var(--stone-line);
-    color: var(--forest);
-    font-family: var(--font-serif);
-    font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  .panel-photo {
+    aspect-ratio: 4 / 5;
+    background: var(--forest-deep);
   }
 
   @media (min-width: 60em) {
-    .outside-grid {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      gap: clamp(2.5rem, 5vw, 5rem);
+    .panel {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(3rem, 5vw, 5rem);
       align-items: center;
     }
 
+    .panel-photo {
+      aspect-ratio: 5 / 6;
+    }
   }
 </style>

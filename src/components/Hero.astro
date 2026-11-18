@@ -79,6 +79,9 @@ const videoLabels =
             </Fragment>
           ))
         }
+        <span class="accent hero-word" style={`--word:${titleWords.length}`}>
+          {tr.hero.titleAccent}
+        </span>
       </h1>
       <p class="hero-location hero-in">{tr.hero.location}</p>
       <p class="lede hero-in">{tr.hero.lede}</p>
@@ -189,10 +192,14 @@ const videoLabels =
     animation-delay: calc(var(--word) * 55ms);
   }
 
+  .hero-panel .accent {
+    display: block;
+    color: var(--ivory);
+  }
+
   .hero-panel h1 {
     color: var(--ivory);
-    max-width: 13ch;
-    letter-spacing: -0.045em;
+    max-width: 14ch;
     text-shadow: 0 2px 20px rgb(0 0 0 / 15%);
   }
 

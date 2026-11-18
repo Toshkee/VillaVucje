@@ -5,49 +5,60 @@
    ------------------------------------------------------------------ */
 
 :root {
-  /* Palette – tuned against the photographs (pine, stone, rust upholstery, green roof). */
+  /* Palette – the original Villa Vučje colours, tuned against the photographs
+     (pine, stone, rust upholstery, green roof). */
   --ivory: #f5f1e8;
   --ivory-deep: #ede7da;
   --forest: #243e32;
   --forest-deep: #1a2f25;
   --sage: #8b9986;
-  --sage-text: #5b6a57; /* sage darkened for AA text on ivory */
+  --sage-text: #5b6a57;
   --stone: #d8d0c1;
   --stone-line: #cfc6b5;
   --rust: #ad6143;
-  --rust-text: #97523a; /* rust darkened for AA text on ivory */
+  --rust-text: #97523a;
   --charcoal: #252922;
   --charcoal-soft: #4f5449;
 
-  --bg: var(--ivory);
-  --text: var(--charcoal);
-  --text-muted: var(--charcoal-soft);
+  /* Roles used by the components. */
+  --paper: var(--ivory);
+  --paper-deep: var(--ivory-deep);
+  --card: #faf7f0;
+  --ink: var(--charcoal);
+  --ink-soft: var(--charcoal-soft);
+  --line: var(--stone-line);
+  --cream: var(--ivory);
+  --rust-deep: var(--rust-text);
+
+  --bg: var(--paper);
+  --text: var(--ink);
+  --text-muted: var(--ink-soft);
 
   /* Type */
-  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
-  --font-sans: 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter Tight Variable', 'Inter Tight', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Newsreader Variable', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
 
-  --text-body: clamp(1.0625rem, 1rem + 0.25vw, 1.15rem);
+  --text-body: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
   --text-small: 0.9375rem;
-  --text-label: 0.8125rem;
-  --text-h1: clamp(2.75rem, 1.7rem + 3.5vw, 4.75rem);
-  --text-h2: clamp(2rem, 1.3rem + 2vw, 3.25rem);
+  --text-h1: clamp(2.9rem, 1.6rem + 5vw, 5.6rem);
+  --text-h2: clamp(2.3rem, 1.5rem + 3vw, 4rem);
   --text-h3: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
-  --text-lede: clamp(1.1rem, 1.02rem + 0.45vw, 1.3rem);
+  --text-lede: clamp(1.125rem, 1.04rem + 0.4vw, 1.3rem);
 
   /* Layout */
-  --container: 76rem; /* 1216px */
-  --gutter: clamp(1.25rem, 4vw, 3.5rem);
-  --section-y: clamp(3rem, 4.5vw, 5.5rem);
-  --radius: 12px;
+  --container: 80rem;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --section-y: clamp(4rem, 8vw, 8rem);
+  --radius: 14px;
+  --radius-lg: clamp(16px, 2vw, 26px);
 
   /* Motion */
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --dur-fast: 180ms;
   --dur: 320ms;
-  --dur-slow: 480ms;
+  --dur-slow: 560ms;
 
-  /* Mobile booking bar – height reserved by JS via body class */
+  --header-h: 4.5rem;
   --bar-height: 4.25rem;
 
   color-scheme: light;
@@ -62,7 +73,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: 4.5rem;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
   background: var(--bg);
 }
 
@@ -70,7 +81,7 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   font-size: var(--text-body);
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--text);
   background: var(--bg);
   overflow-x: clip;
@@ -78,7 +89,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Space for the fixed mobile booking bar, only while it is shown. */
 body.has-bar {
   padding-bottom: calc(var(--bar-height) + env(safe-area-inset-bottom, 0px));
 }
@@ -94,17 +104,16 @@ video {
 h1,
 h2,
 h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.005em;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
   margin: 0;
   text-wrap: balance;
 }
 
 h1 {
   font-size: var(--text-h1);
-  line-height: 1.1;
 }
 
 h2 {
@@ -113,6 +122,23 @@ h2 {
 
 h3 {
   font-size: var(--text-h3);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* The second half of a heading, set in italic serif. */
+.accent {
+  display: block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--rust-text);
+}
+
+.on-dark .accent {
+  color: var(--stone);
 }
 
 p {
@@ -127,12 +153,12 @@ p + p {
 a {
   color: var(--forest);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.16em;
+  text-underline-offset: 0.18em;
   transition: color var(--dur-fast) var(--ease);
 }
 
 a:hover {
-  color: var(--rust-text);
+  color: var(--rust-deep);
 }
 
 button {
@@ -146,7 +172,7 @@ button {
 }
 
 .on-dark :focus-visible {
-  outline-color: var(--ivory);
+  outline-color: var(--cream);
 }
 
 ::selection {
@@ -180,16 +206,15 @@ button {
   left: 0.5rem;
   z-index: 100;
   padding: 0.6rem 1rem;
-  background: var(--forest);
-  color: var(--ivory);
-  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 999px;
   transform: translateY(-200%);
   transition: transform var(--dur-fast) var(--ease);
 }
 
 .skip-link:focus-visible {
   transform: none;
-  outline-color: var(--rust);
 }
 
 .lede {
@@ -202,23 +227,24 @@ button {
   color: var(--text-muted);
 }
 
-/* Soft inset edges and restrained hover feedback, inspired by Sona UI. */
+/* ---- Buttons ------------------------------------------------------ */
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  min-height: 3rem;
-  padding: 0.7rem 1.4rem;
+  gap: 0.6rem;
+  min-height: 3.25rem;
+  padding: 0.75rem 1.5rem;
   font-family: var(--font-sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1rem;
   line-height: 1.2;
+  letter-spacing: -0.005em;
   text-decoration: none;
-  border-radius: var(--radius);
+  border-radius: 999px;
   border: 1px solid transparent;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 12%), 0 2px 3px rgb(26 47 37 / 8%);
   transition:
     background-color var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease),
@@ -226,81 +252,85 @@ button {
     transform var(--dur-fast) var(--ease);
 }
 
-.btn:hover {
-  transform: translateY(-2px);
+.btn:active {
+  transform: translateY(1px);
 }
 
+.btn .arrow,
 .btn .ext-icon {
   transition: transform var(--dur-fast) var(--ease);
+}
+
+.btn:hover .arrow {
+  transform: translateX(3px);
 }
 
 .btn:hover .ext-icon {
   transform: translate(2px, -2px);
 }
 
-.btn:active {
-  transform: translateY(1px);
-}
-
-.btn-primary {
+.btn-primary,
+.btn-dark {
   background: var(--forest);
   color: var(--ivory);
   border-color: var(--forest);
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-dark:hover {
   background: var(--forest-deep);
+  border-color: var(--forest-deep);
   color: var(--ivory);
 }
 
 .btn-secondary {
-  background: transparent;
-  color: var(--forest);
-  border-color: var(--forest);
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line);
 }
 
 .btn-secondary:hover {
-  background: var(--forest);
-  color: var(--ivory);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .btn-light {
-  background: var(--ivory);
-  color: var(--forest);
-  border-color: var(--ivory);
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--cream);
 }
 
 .btn-light:hover {
   background: #fff;
-  color: var(--forest-deep);
+  color: var(--ink);
 }
 
 .btn-outline-light {
   background: transparent;
-  color: var(--ivory);
-  border-color: rgba(245, 241, 232, 0.6);
+  color: var(--cream);
+  border-color: rgb(245 241 232 / 45%);
 }
 
 .btn-outline-light:hover {
-  border-color: var(--ivory);
-  color: var(--ivory);
-  background: rgba(245, 241, 232, 0.08);
+  border-color: var(--cream);
+  color: var(--cream);
+  background: rgb(245 241 232 / 8%);
 }
 
-/* “Opens in a new tab” glyph, sized relative to the surrounding text. */
+.arrow,
 .ext-icon {
-  width: 0.95em;
-  height: 0.95em;
+  width: 1em;
+  height: 1em;
   flex: none;
 }
 
-/* Arrow link used for anchors such as “Explore the house”. */
+/* Arrow link used for anchors such as “See the house”. */
 .text-link {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   min-height: 2.75rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--forest);
   text-decoration: none;
 }
@@ -319,13 +349,15 @@ button {
   transform: rotate(45deg) translate(2px, 2px);
 }
 
-/* Photographs: rectangular, very slight corner softening. The <picture>
-   wrapper is removed from layout so the <img> fills the aspect-ratio box. */
+/* ---- Shared blocks ------------------------------------------------ */
+
+/* Rounded photographs. The <picture> wrapper leaves layout so the <img>
+   fills the aspect-ratio box. */
 .photo {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius);
-  background: var(--stone);
+  border-radius: var(--radius-lg);
+  background: var(--paper-deep);
 }
 
 .photo > picture {
@@ -338,36 +370,99 @@ button {
   object-fit: cover;
 }
 
-/* Section rhythm */
+figure {
+  margin: 0;
+}
+
+figcaption {
+  margin-top: 0.75rem;
+  font-size: var(--text-small);
+  color: var(--text-muted);
+}
+
+/* Small frosted label laid over a photograph. */
+.photo-tag {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.9rem;
+  max-width: calc(100% - 1.8rem);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  color: var(--ink);
+  background: rgb(250 247 240 / 90%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+/* Rounded labels for amenities and highlights. */
+.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chips li {
+  padding: 0.5rem 1rem;
+  font-size: var(--text-small);
+  line-height: 1.3;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+}
+
+.on-dark .chips li {
+  border-color: rgb(245 241 232 / 22%);
+  background: rgb(245 241 232 / 6%);
+  color: var(--cream);
+}
+
+/* Section rhythm: heading on the left, text on the right. */
 .section {
   padding-block: var(--section-y);
 }
 
-.section-band {
-  background: var(--ivory-deep);
+.split {
+  display: grid;
+  gap: 1.5rem;
 }
 
-.section-head {
-  max-width: 40rem;
-  margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+.split-body p {
+  color: var(--text-muted);
 }
 
-.section-head p {
-  margin-top: 1rem;
+.split-body p:first-child {
+  font-size: var(--text-lede);
+  line-height: 1.5;
+  color: var(--text);
 }
 
-hr.rule {
-  border: 0;
-  border-top: 1px solid var(--stone-line);
-  margin: 0;
+.on-dark .split-body p {
+  color: rgb(245 241 232 / 72%);
+}
+
+.on-dark .split-body p:first-child {
+  color: var(--cream);
+}
+
+@media (min-width: 60em) {
+  .split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(3rem, 6vw, 7rem);
+    align-items: start;
+  }
 }
 
 /* ---- Motion ------------------------------------------------------- */
 
-/* Reveal: content is visible by default; JS + motion preference opt in. */
 html.js:not(.reduced-motion) [data-reveal] {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(18px);
   transition:
     opacity var(--dur-slow) var(--ease),
     transform var(--dur-slow) var(--ease);

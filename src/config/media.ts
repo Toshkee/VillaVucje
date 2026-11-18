@@ -35,7 +35,7 @@ export type PhotoKey =
   | 'twinBedroom'
   | 'doubleBedroom';
 
-export type PhotoRole = 'hero' | 'inside-large' | 'inside-detail' | 'outside' | 'gallery';
+export type PhotoRole = 'hero' | 'inside-large' | 'inside-detail' | 'outside' | 'location' | 'gallery';
 
 export interface Focal {
   /** Percent from the left edge. */
@@ -66,7 +66,7 @@ export const photos: readonly Photo[] = [
     file: 'exterior-house.jpg',
     image: exterior,
     portrait: exteriorPortrait,
-    roles: ['gallery'],
+    roles: ['location', 'gallery'],
     focalMobile: { x: 24, y: 40 },
     focalDesktop: { x: 40, y: 45 },
     season: 'late-autumn',

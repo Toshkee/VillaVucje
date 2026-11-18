@@ -1,6 +1,7 @@
 ---
 import { anchors, localePath, t, type Locale } from '@config/i18n';
 import LanguageSwitch from './LanguageSwitch.astro';
+import Arrow from './Arrow.astro';
 
 interface Props {
   locale: Locale;
@@ -20,12 +21,15 @@ const links = [
 
 <header class="site-header">
   <div class="container bar">
-    <a class="wordmark" href={base} aria-label="Villa Vučje">
+    <a class="wordmark" href={base}>
       <svg class="mark" aria-hidden="true" viewBox="0 0 28 22" fill="none">
         <path d="M2 14 14 3l12 11" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
         <path d="M6 12.5V20h16v-7.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
       </svg>
-      <span>Villa Vučje</span>
+      <span class="wordmark-text">
+        <span class="wordmark-name">Villa Vučje</span>
+        <span class="wordmark-place">Crkvine · Kolašin</span>
+      </span>
     </a>
 
     <button
@@ -37,28 +41,29 @@ const links = [
       data-label-open={tr.nav.menuOpen}
       data-label-close={tr.nav.menuClose}
     >
-      <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
       <span data-menu-label>{tr.nav.menuOpen}</span>
+      <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
     </button>
 
     <nav id="site-nav" class="nav" aria-label={tr.nav.menuAria} data-nav>
       <ul class="nav-list">
         {
           links.map((l) => (
-            <li>
+            <li class="nav-item">
               <a href={l.href} data-nav-link>
                 {l.label}
               </a>
             </li>
           ))
         }
-        <li class="nav-lang">
-          <LanguageSwitch locale={locale} />
-        </li>
-        <li class="nav-cta">
-          <a class="btn btn-primary" href={`${base}#${a.booking}`} data-nav-link>{tr.cta.availability}</a>
-        </li>
       </ul>
+      <div class="nav-end">
+        <LanguageSwitch locale={locale} />
+        <a class="btn btn-dark nav-cta" href={`${base}#${a.booking}`} data-nav-link>
+          {tr.cta.availability}
+          <Arrow />
+        </a>
+      </div>
     </nav>
   </div>
 </header>
@@ -68,8 +73,10 @@ const links = [
     position: sticky;
     top: 0;
     z-index: 40;
-    background: var(--ivory);
-    box-shadow: 0 2px 14px rgb(26 47 37 / 5%);
+    background: rgb(245 241 232 / 88%);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    backdrop-filter: saturate(140%) blur(14px);
+    border-bottom: 1px solid rgb(37 41 34 / 8%);
   }
 
   .bar {
@@ -77,30 +84,44 @@ const links = [
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    min-height: 4.5rem;
+    min-height: var(--header-h);
   }
 
   .wordmark {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    color: var(--forest);
+    gap: 0.65rem;
+    color: var(--ink);
     text-decoration: none;
     min-height: 2.75rem;
   }
 
   .wordmark:hover {
-    color: var(--forest-deep);
+    color: var(--ink);
   }
 
   .mark {
-    width: 1.5rem;
+    width: 1.6rem;
     height: auto;
     color: var(--forest);
+  }
+
+  .wordmark-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .wordmark-name {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.4rem;
+    letter-spacing: -0.01em;
+  }
+
+  .wordmark-place {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
   }
 
   .menu-toggle {
@@ -108,25 +129,26 @@ const links = [
     align-items: center;
     gap: 0.6rem;
     min-height: 2.75rem;
-    padding: 0.4rem 0.2rem 0.4rem 0.6rem;
-    background: none;
-    border: 0;
+    padding: 0.4rem 1rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
     cursor: pointer;
-    font-weight: 600;
-    color: var(--forest);
+    font-weight: 500;
+    color: var(--ink);
   }
 
   .menu-icon {
     position: relative;
-    width: 1.25rem;
-    height: 0.9rem;
+    width: 1.1rem;
+    height: 0.7rem;
   }
 
   .menu-icon span {
     position: absolute;
     left: 0;
     width: 100%;
-    height: 2px;
+    height: 1.5px;
     background: currentColor;
     transition: transform var(--dur-fast) var(--ease), top var(--dur-fast) var(--ease);
   }
@@ -136,36 +158,37 @@ const links = [
   }
 
   .menu-icon span:last-child {
-    top: calc(100% - 2px);
+    top: calc(100% - 1.5px);
   }
 
   .menu-toggle[aria-expanded='true'] .menu-icon span:first-child {
-    top: calc(50% - 1px);
+    top: calc(50% - 0.75px);
     transform: rotate(45deg);
   }
 
   .menu-toggle[aria-expanded='true'] .menu-icon span:last-child {
-    top: calc(50% - 1px);
+    top: calc(50% - 0.75px);
     transform: rotate(-45deg);
   }
 
-  /* Mobile: the nav drops below the bar as a plain list. */
+  /* Phones: the nav drops below the bar as a card. */
   .nav {
     display: none;
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    background: var(--ivory);
-    border-radius: 0 0 var(--radius) var(--radius);
-    box-shadow: 0 12px 24px -16px rgba(37, 41, 34, 0.35);
+    left: var(--gutter);
+    right: var(--gutter);
+    top: calc(100% + 0.5rem);
+    padding: 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 48px -24px rgb(37 41 34 / 35%);
   }
 
   .nav.is-open {
     display: block;
   }
 
-  /* Without JavaScript the toggle is hidden and the nav is always visible. */
   html:not(.js) .menu-toggle {
     display: none;
   }
@@ -175,36 +198,36 @@ const links = [
     position: static;
     box-shadow: none;
     border: 0;
+    background: none;
   }
 
   .nav-list {
     list-style: none;
     margin: 0;
-    padding: 0.5rem var(--gutter) 1.25rem;
-    display: flex;
-    flex-direction: column;
+    padding: 0;
   }
 
-  .nav-list a:not(.btn) {
+  .nav-item a {
     display: flex;
     align-items: center;
-    min-height: 3rem;
-    font-weight: 600;
-    text-decoration: none;
-    color: var(--forest);
-    border-radius: 0.6rem;
+    min-height: 3.25rem;
     padding-inline: 0.75rem;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
   }
 
-  .nav-lang {
-    padding: 0.4rem 0.75rem 0.25rem;
+  .nav-end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0.75rem 0.5rem;
   }
 
   .nav-cta {
-    margin-top: 1rem;
-  }
-
-  .nav-cta .btn {
     width: 100%;
   }
 
@@ -214,56 +237,55 @@ const links = [
     }
 
     .nav {
-      display: block;
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
       position: static;
+      padding: 0;
       background: none;
       border: 0;
       box-shadow: none;
     }
 
     .nav-list {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-inline: auto;
+      padding: 0.3rem;
+      background: rgb(250 247 240 / 70%);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+    }
+
+    .nav-item a {
+      min-height: 2.5rem;
+      padding-inline: 1.1rem;
+      font-size: 0.95rem;
+      letter-spacing: 0;
+      border: 0;
+      border-radius: 999px;
+      transition: background-color var(--dur-fast) var(--ease);
+    }
+
+    .nav-item a:hover {
+      background: var(--paper-deep);
+      color: var(--ink);
+    }
+
+    .nav-end {
       flex-direction: row;
       align-items: center;
-      gap: 1.75rem;
+      gap: 1rem;
       padding: 0;
     }
 
-    .nav-list a:not(.btn) {
-      border: 0;
-      min-height: 2.75rem;
-      position: relative;
-    }
-
-    .nav-list a:not(.btn)::after {
-      content: '';
-      position: absolute;
-      left: 0.75rem;
-      right: 0.75rem;
-      bottom: 0.45rem;
-      height: 1px;
-      background: currentColor;
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform var(--dur-fast) var(--ease);
-    }
-
-    .nav-list a:not(.btn):hover::after,
-    .nav-list a:not(.btn):focus-visible::after {
-      transform: scaleX(1);
-    }
-
-    .nav-lang {
-      padding: 0 0 0 0.5rem;
-    }
-
     .nav-cta {
-      margin: 0 0 0 0.5rem;
-    }
-
-    .nav-cta .btn {
       width: auto;
       min-height: 2.75rem;
-      padding-block: 0.5rem;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.95rem;
     }
   }
 </style>

@@ -1,7 +1,7 @@
 ---
-import { t, type Locale } from '@config/i18n';
+import { anchors, localePath, t, type Locale } from '@config/i18n';
 import LanguageSwitch from './LanguageSwitch.astro';
-import { contact, property, social } from '@config/property';
+import { activeProviders, contact, property, social } from '@config/property';
 import ExternalIcon from './ExternalIcon.astro';
 
 interface Props {
@@ -11,97 +11,132 @@ interface Props {
 const { locale } = Astro.props;
 const tr = t(locale);
 const year = new Date().getFullYear();
-const hasContact = Boolean(contact.email || contact.phone || contact.whatsapp);
+const base = localePath[locale];
+const a = anchors[locale];
+const providerName = { booking: 'Booking.com', airbnb: 'Airbnb' } as const;
+
+const links = [
+  { href: `${base}#${a.house}`, label: tr.nav.house },
+  { href: `${base}#${a.gallery}`, label: tr.nav.gallery },
+  { href: `${base}#${a.location}`, label: tr.nav.location },
+];
 ---
 
-<footer class="site-footer" data-bar-stop>
+<footer class="site-footer on-dark" data-bar-stop>
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
         <p class="footer-name">Villa Vučje</p>
-        <p class="muted">{tr.footer.tagline}</p>
-        <p class="muted">{property.locality}, {property.postalCode} {property.town}, {property.countryName[locale]}</p>
+        <p class="footer-tagline">{tr.footer.tagline}</p>
+        <p class="footer-address">{property.locality}, {property.postalCode} {property.town}, {property.countryName[locale]}</p>
       </div>
 
-      {
-        hasContact && (
-          <div>
-            <h2 class="footer-heading">{tr.footer.contactHeading}</h2>
-            <ul class="footer-list">
-              {contact.email && (
-                <li>
-                  <a href={`mailto:${contact.email}`}>{contact.email}</a>
-                </li>
-              )}
-              {contact.phone && (
-                <li>
-                  <a href={`tel:${contact.phone.replace(/\s+/g, '')}`}>{contact.phone}</a>
-                </li>
-              )}
-              {contact.whatsapp && (
-                <li>
-                  <a href={`https://wa.me/${contact.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
-                    WhatsApp
-                  </a>
-                </li>
-              )}
-            </ul>
-          </div>
-        )
-      }
+      <div>
+        <ul class="footer-list">
+          {
+            links.map((l) => (
+              <li>
+                <a href={l.href}>{l.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
 
       <div>
-        <h2 class="footer-heading">{tr.footer.followHeading}</h2>
+        <h2 class="footer-heading">{tr.footer.bookHeading}</h2>
         <ul class="footer-list">
+          {
+            activeProviders.map((p) => (
+              <li>
+                <a href={p.url} target="_blank" rel="noopener noreferrer">
+                  {providerName[p.id]}
+                  <ExternalIcon />
+                  <span class="visually-hidden">({tr.cta.newTab})</span>
+                </a>
+              </li>
+            ))
+          }
           <li>
             <a href={social.instagram.url} target="_blank" rel="noopener noreferrer">
-              {tr.footer.instagram} · @{social.instagram.handle}
+              {tr.footer.instagram}
               <ExternalIcon />
               <span class="visually-hidden">({tr.cta.newTab})</span>
             </a>
           </li>
+          {contact.email && (
+            <li>
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>
+            </li>
+          )}
+          {contact.phone && (
+            <li>
+              <a href={`tel:${contact.phone.replace(/\s+/g, '')}`}>{contact.phone}</a>
+            </li>
+          )}
+          {contact.whatsapp && (
+            <li>
+              <a href={`https://wa.me/${contact.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                WhatsApp
+              </a>
+            </li>
+          )}
         </ul>
       </div>
 
       <div>
         <h2 class="footer-heading">{tr.footer.languageHeading}</h2>
-        <LanguageSwitch locale={locale} variant="full" />
+        <LanguageSwitch locale={locale} variant="full" dark />
       </div>
     </div>
 
-    <p class="footer-legal muted">© {year} {property.name}. {tr.footer.rights}</p>
+    <div class="footer-legal">
+      <p>© {year} {property.name}. {tr.footer.rights}</p>
+      <p>@{social.instagram.handle}</p>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    padding: clamp(2.25rem, 3.5vw, 3.5rem) 0 1.5rem;
+    padding: clamp(3.5rem, 7vw, 6rem) 0 1.5rem;
+    background: var(--forest-deep);
+    color: var(--cream);
     font-size: var(--text-small);
   }
 
   .footer-grid {
     display: grid;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
   .footer-name {
     font-family: var(--font-serif);
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    letter-spacing: -0.04em;
-    color: var(--forest);
-    margin-bottom: 0.5rem;
+    font-style: italic;
+    font-size: clamp(2.75rem, 2rem + 4vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--cream);
   }
 
-  .footer-brand p + p {
-    margin-top: 0.25rem;
+  .footer-tagline {
+    margin-top: 1.25rem;
+    max-width: 34ch;
+    font-size: 1rem;
+    color: rgb(245 241 232 / 80%);
+  }
+
+  .footer-address {
+    margin-top: 0.5rem;
+    color: rgb(245 241 232 / 55%);
   }
 
   .footer-heading {
-    font-family: var(--font-sans);
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--sage-text);
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
+    font-size: var(--text-small);
+    font-weight: 500;
+    letter-spacing: 0;
+    color: rgb(245 241 232 / 55%);
   }
 
   .footer-list {
@@ -114,23 +149,30 @@ const hasContact = Boolean(contact.email || contact.phone || contact.whatsapp);
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    min-height: 2.75rem;
+    min-height: 2.5rem;
+    font-size: 1rem;
+    color: var(--cream);
+    text-decoration: none;
+  }
+
+  .footer-list a:hover {
+    color: var(--stone);
   }
 
   .footer-legal {
-    max-width: none;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--stone-line);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(245 241 232 / 12%);
+    color: rgb(245 241 232 / 55%);
   }
 
   @media (min-width: 48em) {
     .footer-grid {
-      grid-template-columns: 2fr 1fr 1fr;
-    }
-
-    .footer-grid > div:nth-child(n + 4) {
-      grid-column: auto;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
     }
   }
 </style>

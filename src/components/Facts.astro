@@ -1,5 +1,6 @@
 ---
 import { t, type Locale } from '@config/i18n';
+import { bookingReviews, property } from '@config/property';
 
 interface Props {
   locale: Locale;
@@ -7,24 +8,28 @@ interface Props {
 
 const { locale } = Astro.props;
 const tr = t(locale);
-const items = [
-  tr.facts.location,
-  tr.facts.guests,
-  tr.facts.bedrooms,
-  tr.facts.bathrooms,
-  tr.facts.area,
-  tr.facts.parking,
+const decimal = (n: number): string => (locale === 'sr' ? String(n).replace('.', ',') : String(n));
+
+const items: { value: string; unit?: string; label: string }[] = [
+  { value: String(property.capacity.value), label: tr.facts.guests },
+  { value: String(property.bedrooms.value), label: tr.facts.bedrooms },
+  { value: String(property.floorAreaM2.value), unit: 'm²', label: tr.facts.area },
+  { value: String(property.distanceToKolasinKm.value), unit: 'km', label: tr.facts.distance },
+  { value: decimal(bookingReviews.score), unit: '/10', label: tr.facts.score },
 ];
 ---
 
-<section class="facts container" aria-labelledby="facts-title" data-reveal>
+<section class="facts container" aria-labelledby="facts-title">
   <h2 id="facts-title" class="visually-hidden">{tr.facts.heading}</h2>
   <dl class="facts-row">
     {
-      items.map((item) => (
-        <div class="fact">
+      items.map((item, i) => (
+        <div class="fact" data-reveal data-reveal-delay={String(i * 60)}>
           <dt>{item.label}</dt>
-          <dd>{item.value}</dd>
+          <dd>
+            {item.value}
+            {item.unit && <span class="unit">{item.unit}</span>}
+          </dd>
         </div>
       ))
     }
@@ -33,47 +38,82 @@ const items = [
 
 <style>
   .facts {
-    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    padding-top: clamp(3rem, 6vw, 5rem);
   }
 
   .facts-row {
     margin: 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem;
-    padding: clamp(1.25rem, 2.5vw, 1.75rem);
-    background: var(--ivory-deep);
-    border-radius: var(--radius);
+    border-top: 1px solid var(--line);
   }
 
   .fact {
     display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem 1.5rem 0;
+    border-bottom: 1px solid var(--line);
   }
 
-  dt {
-    font-size: var(--text-small);
-    color: var(--sage-text);
+  .fact:nth-child(2n) {
+    padding-left: 1rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .fact:last-child {
+    grid-column: 1 / -1;
+    padding-left: 0;
+    border-left: 0;
   }
 
   dd {
     margin: 0;
-    font-family: var(--font-serif);
-    font-size: clamp(1.15rem, 1.6vw, 1.5rem);
-    color: var(--charcoal);
+    font-size: clamp(3rem, 2rem + 4vw, 5.25rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+    color: var(--ink);
   }
 
-  @media (min-width: 48em) {
-    .facts-row {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+  .unit {
+    margin-left: 0.15em;
+    font-size: 0.32em;
+    letter-spacing: -0.01em;
+    color: var(--ink-soft);
+    vertical-align: 0.1em;
+  }
+
+  .fact:first-child dd {
+    color: var(--rust);
+  }
+
+  dt {
+    max-width: 16ch;
+    font-size: var(--text-small);
+    line-height: 1.35;
+    color: var(--ink-soft);
   }
 
   @media (min-width: 60em) {
     .facts-row {
-      grid-template-columns: 1.3fr 0.8fr 1fr 0.9fr 1fr 1.4fr;
-      gap: 0 1.5rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fact,
+    .fact:nth-child(2n),
+    .fact:last-child {
+      grid-column: auto;
+      padding: 2rem 1.5rem;
+      border-bottom: 0;
+      border-left: 1px solid var(--line);
+    }
+
+    .fact:first-child {
+      padding-left: 0;
+      border-left: 0;
     }
   }
 </style>
